@@ -16,3 +16,23 @@
   from = "/api/health"
   to = "/.netlify/functions/health"
   status = 200
+
+[[redirects]]
+  from = "/api/soundcloud/login"
+  to = "/.netlify/functions/soundcloud-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/soundcloud/callback"
+  to = "/.netlify/functions/soundcloud-callback"
+  status = 200
+
+[[redirects]]
+  from = "/api/soundcloud/session"
+  to = "/.netlify/functions/soundcloud-session"
+  status = 200
+
+[[redirects]]
+  from = "/api/soundcloud/disconnect"
+  to = "/.netlify/functions/soundcloud-disconnect"
+  status = 200
