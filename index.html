@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#090b10" name="theme-color"/><title>DJ Crate V8.1 — Auto Genre</title><style>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#090b10" name="theme-color"/><title>DJ Crate V8.3 — Strict Genres + Audio Listening</title><style>
 :root{color-scheme:dark;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#090b10;color:#f4f3fa;--purple:#ad83ff;--muted:#9a9ba9;--border:#292b36;--panel:#12141d}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse 70% 25% at 80% 5%,rgba(105,53,188,.22),transparent 70%),#090b10;color:#f4f3fa}
 .topbar{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:23px 25px;border-bottom:1px solid rgba(255,255,255,.09)}.brand{font-size:16px;font-weight:900;letter-spacing:.1em;display:flex;align-items:center;gap:10px}.brandmark{display:inline-grid;place-items:center;width:34px;height:34px;background:#a87dff;color:#0b0811;border-radius:10px;font-size:26px}.brandaccent{color:#ac82ff}.topright{font-size:10px;font-weight:800;letter-spacing:.18em;color:#9a9baa;display:flex;align-items:center;gap:9px}.live-dot{width:7px;height:7px;background:#8ef6b7;box-shadow:0 0 12px #8ef6b7;border-radius:50%}.version{border:1px solid #454053;padding:6px 8px;border-radius:6px;color:#d8c3ff}
@@ -7,9 +7,47 @@ main{max-width:1040px;margin:auto;padding:70px 24px 80px;position:relative}.hero
 .panel{background:linear-gradient(150deg,#161821,#101118);border:1px solid var(--border);border-radius:19px;padding:30px;margin:16px 0;box-shadow:0 15px 40px rgba(0,0,0,.13)}.panel-main{border-color:#49405e;background:linear-gradient(155deg,#1c1927,#12141c 50%)}h2{font-size:clamp(19px,3vw,25px);letter-spacing:-.035em;margin:0 0 22px;font-weight:800}label{display:block;font-weight:700;font-size:13px;color:#dddbe7;margin:20px 0 9px}textarea,input,select{display:block;width:100%;background:#0b0d14;color:#f7f5ff;border:1px solid #353543;border-radius:10px;padding:15px;font:inherit;font-size:15px;outline:none;transition:border .2s,box-shadow .2s}textarea:focus,input:focus,select:focus{border-color:#ac82ff;box-shadow:0 0 0 3px rgba(172,130,255,.15)}textarea{min-height:120px;resize:vertical;line-height:1.65}textarea::placeholder,input::placeholder{color:#6d6c7d}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.muted{font-size:12px;line-height:1.7;color:#9997aa}.grid .muted{padding:3px 0 8px}.checkbox{display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.5;color:#d5d2e2;padding:14px 0}.checkbox input{width:17px;height:17px;accent-color:#ac82ff;flex:none;margin:1px 0}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}button,.button{background:linear-gradient(120deg,#bb97ff,#9d6af3);color:#130e20;border:0;border-radius:10px;padding:15px 19px;font-weight:850;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:46px;transition:transform .15s,filter .15s}button:hover,.button:hover{filter:brightness(1.08);transform:translateY(-1px)}button.secondary,.button.secondary{background:#24212f;color:#e3d6ff;border:1px solid #4a405e}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.status{min-height:18px}.error{color:#ff98b1}.notice{border:1px solid #453654;border-left:3px solid #a57cf0;padding:14px 16px;background:#22192d;border-radius:10px;font-size:12px;line-height:1.7;color:#c7b8d8}.track{display:flex;gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid #2d2b38}.track:last-child{border-bottom:0}.track img{width:78px;height:78px;object-fit:cover;border-radius:12px;background:#2b233a;flex:none}.details{flex:1;min-width:0}.details strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}.details a{color:#c7a7ff;font-size:12px;font-weight:700;display:inline-block;margin-top:5px;text-underline-offset:4px}.small{font-size:12px}.flag{font-size:10px;border:1px solid #504361;border-radius:50px;padding:5px 9px;color:#c9b0f1;display:inline-block;margin:6px 5px 0 0;letter-spacing:.02em}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #4b405a;border-radius:50px;padding:7px 10px;font-size:12px;color:#ddc7f9}a{color:#c6a5ff}details summary{cursor:pointer;font-weight:750;color:#d9c8ff}details p{margin-top:16px}.footer{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid #292936;padding-top:27px;margin-top:42px;color:#797888;font-size:10px;letter-spacing:.13em}.footer .brand{color:#e7def5;font-size:12px}
 @media(max-width:640px){.topbar{padding:17px 18px}.topright{font-size:9px;letter-spacing:.05em}.topright .version{display:none}main{padding:44px 16px 48px}.hero-tags{margin-bottom:28px}.hero-tags span{font-size:9px;padding:8px}.panel{padding:21px 17px;border-radius:15px}.grid{grid-template-columns:1fr;gap:0}.track{gap:12px}.track img{width:60px;height:60px}.details strong{font-size:14px}.footer{flex-wrap:wrap}.actions button{flex-grow:1}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-</style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8</span></div></header><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.1</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><div class="hero-tags"><span>01 / REFERENCE LED</span><span>02 / REAL CATALOGUE RESULTS</span><span>03 / EXPORT READY</span></div><section class="panel panel-main"><h2>01  /  Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
-Or type: Artist — Track Name"></textarea><p class="muted">Up to five references. Public SoundCloud links can be identified by metadata; private links may require artist and title. Audio is not analysed.</p><div class="grid"><div><label for="style">Sound / subgenre</label><select id="style"><option value="" selected>Detect from reference tracks…</option><option value="minimal house">Minimal / rolling house</option><option value="uk garage">UK garage</option><option value="deep house">Deep house</option><option value="tech house">Tech house</option><option value="house">House</option><option value="techno">Techno</option><option value="breakbeat">Breakbeat</option><option value="drum and bass">Drum &amp; bass</option><option value="disco">Disco / funky</option><option value="hip hop">Hip-hop</option><option value="trance">Trance</option><option value="electronic">Other electronic</option></select><p id="genreFeedback" class="muted" aria-live="polite">Paste a reference to suggest the genre automatically.</p></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict match: reject weak metadata matches instead of filling the crate</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>02  /  Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>metadata-based discovery candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><div id="results"></div></section><section class="panel"><h2>03  /  Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, then searches Apple's public music catalogue in multiple markets using the reference artist/title and chosen subgenre. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8 / BETA</span></footer></main><script>
-const $=id=>document.getElementById(id);let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
+ .audio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.audio-drop{background:#0d0e18;border:1px dashed #74618a;border-radius:12px;padding:16px}.audio-drop input{font-size:13px;margin-top:7px}.audio-score{font-weight:800;color:#b8f0d1}.audio-note{font-size:12px;color:#c3b7d0}.candidate-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #302c39;padding:12px 0}.candidate-row>div{min-width:0;overflow-wrap:anywhere}.candidate-row strong{font-size:13px}.candidate-row small{display:block;color:#9d96aa}.confidence{color:#d9c5ed;font-size:11px}.genre-warning{color:#f1c3a5;font-size:12px;line-height:1.6}@media(max-width:640px){.audio-grid{grid-template-columns:1fr}} </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.3</span></div></header><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.3</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><div class="hero-tags"><span>01 / REFERENCE LED</span><span>02 / REAL CATALOGUE RESULTS</span><span>03 / EXPORT READY</span></div><section class="panel panel-main"><h2>01  /  Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
+Or type: Artist — Track Name"></textarea><p class="muted">Up to five references. Public SoundCloud links can be identified by metadata; private links may require artist and title. Audio is not analysed.</p><div class="grid"><div><label for="style">Sound / subgenre</label><select id="style"><option value="minimal house">Minimal / rolling house</option><option value="uk garage">UK garage</option><option value="deep house">Deep house</option><option value="tech house">Tech house</option><option value="house">House</option><option value="techno">Techno</option><option value="breakbeat">Breakbeat</option><option value="drum and bass">Drum &amp; bass</option><option value="disco">Disco / funky</option><option value="hip hop">Hip-hop</option><option value="trance">Trance</option><option value="electronic">Other electronic</option></select></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict genre: exclude uncertain or unrelated metadata results; return fewer tracks when necessary</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>02  /  Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>strictly filtered metadata candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><div id="results"></div></section><section class="panel" id="audioPanel"><h2>03 / Listen &amp; compare audio <span class="version">BETA</span></h2>
+<p class="muted">Compare real audio you are allowed to analyse. Upload one reference and several candidate files. DJ Crate analyses audio locally on your phone, then ranks candidates by their musical characteristics. <b>This is audio signal analysis, not a trained AI recognition model</b>; it is separate from the streaming catalogue.</p>
+<div class="audio-grid"><div class="audio-drop"><label for="audioReference">Reference audio</label><input type="file" id="audioReference" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">One file you have permission to analyse.</p></div>
+<div class="audio-drop"><label for="audioCandidates">Candidate audio files</label><input type="file" id="audioCandidates" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">Select up to 12 tracks to compare.</p></div></div>
+<div class="actions"><button id="analyzeAudio" class="secondary">Analyse and compare audio</button><button id="audioCSV" disabled class="secondary">Download comparison CSV</button></div>
+<p id="audioStatus" class="muted status" role="status"></p><div id="audioResults"></div>
+<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or actual 90% sound similarity.</p></section><section class="panel"><h2>04 / SoundCloud discovery <span style="font-size:11px;color:#c29cec">BETA / PREPARED</span></h2>
+<p class="muted">An additional SoundCloud public-track search can be enabled once your replacement API credentials are stored safely in Netlify. This is separate from the Apple-backed recommendations above.</p>
+<p id="scState" class="muted">Checking SoundCloud integration status…</p>
+<div class="grid"><div><label for="scQuery">Search SoundCloud tracks</label><input id="scQuery" placeholder="e.g. rolling underground house"></div><div><label for="scGenre">Genre tag (optional)</label><input id="scGenre" placeholder="e.g. Deep House"></div></div>
+<div class="actions"><button id="scSearch" class="secondary" disabled>Search SoundCloud</button></div>
+<p id="scMessage" class="muted" role="status"></p><div id="scResults"></div>
+<p class="muted">Track tags vary, and this search does not listen to audio. Matching the selected genre is not guaranteed. Opening results takes you to the original SoundCloud upload.</p>
+</section><section class="panel"><h2>05  /  Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, then searches Apple's public music catalogue in multiple markets using the reference artist/title and chosen subgenre. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.3 / BETA</span></footer></main><script>
+const $=id=>document.getElementById(id);
+async function updateSoundCloudStatus(){
+ try{const response=await fetch('/api/soundcloud/status');if(!response.ok)throw Error('Status unavailable');
+ const data=await response.json();
+ $('scState').textContent=data.message||'SoundCloud status unknown.';
+ $('scSearch').disabled=!data.configured;
+ }catch{$('scState').textContent='SoundCloud connection is not deployed yet. The existing discovery engine still works.';}
+}
+$('scSearch').onclick=async()=>{
+ const query=$('scQuery').value.trim(),genre=$('scGenre').value.trim(),out=$('scResults');
+ if(query.length<2){$('scMessage').textContent='Type at least two characters to search.';return;}
+ $('scSearch').disabled=true;out.replaceChildren();$('scMessage').textContent='Searching public SoundCloud tracks…';
+ try{let response=await fetch('/api/soundcloud/search?'+new URLSearchParams({q:query,genre}));
+ const data=await response.json();if(!response.ok)throw Error(data.error||'SoundCloud search failed');
+ $('scMessage').textContent=data.items.length+' track candidates from SoundCloud. Tags are not audio-verified matches.';
+ for(const t of data.items){const row=document.createElement('div');row.className='track';
+ const art=document.createElement('img');art.src=t.artwork||'';art.alt='';art.loading='lazy';
+ const info=document.createElement('div');info.className='details';
+ const name=document.createElement('strong');name.textContent=t.title;
+ const artist=document.createElement('div');artist.className='muted';artist.textContent=t.artist+' · '+(t.genre||'Unspecified genre');
+ const link=document.createElement('a');link.textContent='Open on SoundCloud';link.href=t.url;link.target='_blank';link.rel='noopener noreferrer';
+ info.append(name,artist,link);row.append(art,info);out.append(row);}
+ }catch(e){$('scMessage').textContent=e.message}finally{$('scSearch').disabled=false;}
+};
+updateSoundCloudStatus();
+let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
 async function batchSearch(tasks,onProgress){
  const response=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tasks})});
  const data=await response.json().catch(()=>({}));
@@ -26,74 +64,180 @@ async function refInfo(raw){
  if(!response.ok)throw Error(data.error||'Could not identify the SoundCloud reference');
  return data;
 }
-
-// Genre suggestions use publicly available track metadata, not audio analysis.
-let genreRun=0,genreTimer=0,genreUserChoice=false;
-const genrePatterns=[
- ['uk garage',/\b(uk garage|speed garage|2[ -]?step|ukg)\b/i],
- ['drum and bass',/\b(drum\s*(?:&|and|n)\s*bass|dnb|jungle)\b/i],
- ['minimal house',/\b(minimal house|microhouse|rominimal)\b/i],
- ['tech house',/\btech[ -]?house\b/i],
- ['deep house',/\bdeep[ -]?house\b/i],
- ['breakbeat',/\b(breakbeat|breaks)\b/i],
- ['trance',/\btrance\b/i],
- ['techno',/\btechno\b/i],
- ['disco',/\b(disco|nu[ -]?disco)\b/i],
- ['hip hop',/\b(hip[ -]?hop|rap)\b/i],
- ['house',/\bhouse\b/i]
-];
-function genreGuess(text){return genrePatterns.filter(([key,pattern])=>pattern.test(text)).map(([key])=>key)}
-function genreNotice(text){$('genreFeedback').textContent=text;}
-$('style').addEventListener('change',()=>{genreUserChoice=true;genreRun++;genreNotice('You chose this genre manually.');});
-async function autoDetectGenre(){
- const run=++genreRun,raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,2);
- if(!raw.length){genreNotice('Paste a reference to suggest the genre automatically.');return;}
- genreUserChoice=false;genreNotice('Checking the reference genre…');
- let votes=new Map();
- const vote=(g,n)=>votes.set(g,(votes.get(g)||0)+n);
- try{
- for(const value of raw){
-  let ref;try{ref=await refInfo(value)}catch{if(value.startsWith('http'))continue;ref={name:value,artist:''}}
-  if(run!==genreRun||genreUserChoice)return;
-  for(const g of genreGuess(ref.name))vote(g,1);
-  const term=[ref.artist,ref.name].filter(Boolean).join(' ').slice(0,105);
-  if(!term)continue;
-  let response;try{response=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tasks:[{term,country:'gb'}]})})}catch{continue}
-  if(!response.ok)continue;
-  const data=await response.json();
-  const candidates=(data.found||[]).flatMap(v=>v.results||[]);
-  const wanted=norm(ref.name),artist=norm(ref.artist||ref.name.split(/\s[-–—]\s/)[0]);
-  const matches=candidates.map(t=>{
-   const title=norm(t.trackName),foundArtist=norm(t.artistName);let match=0;
-   if(title===wanted)match+=8;else if(wanted.length>5&&(title.includes(wanted)||wanted.includes(title)&&title.length>5))match+=5;
-   if(artist.length>3&&(foundArtist===artist||foundArtist.includes(artist)))match+=7;
-   return {track:t,match};
-  }).sort((a,b)=>b.match-a.match);
-  if(matches[0]&&matches[0].match>=7){
-    const track=matches[0].track,genre=String(track.primaryGenreName||'');
-    let guesses=genreGuess(genre+' '+track.collectionName);
-    if(guesses.length)vote(guesses[0],5);
-    else if(/^electronic$/i.test(genre))vote('electronic',3);
-  }
- }
- if(run!==genreRun||genreUserChoice)return;
- const top=[...votes].sort((a,b)=>b[1]-a[1]);
- if(!top.length||top[0][1]<2||(top[1]&&top[1][1]===top[0][1])){
-   genreNotice('Not enough genre information. Please select a genre manually.');return;
- }
- $('style').value=top[0][0];
- genreNotice('Suggested: '+$('style').selectedOptions[0].text+'. Change it if needed.');
- }catch{if(run===genreRun)genreNotice('Could not detect genre. Please choose it manually.');}
-}
-$('refs').addEventListener('input',()=>{clearTimeout(genreTimer);++genreRun;genreUserChoice=false;genreNotice('Checking after you finish pasting…');genreTimer=setTimeout(autoDetectGenre,700)});
-
 function escapeCSV(v){return '"'+String(v??'').replaceAll('"','""')+'"'}function saveCSV(name,rows){let blob=new Blob(['\ufeff'+rows.map(row=>row.map(escapeCSV).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}
-const styleMap={'minimal house':['minimal house','minimal techno','deep house'],'uk garage':['uk garage','2 step garage','speed garage'],'deep house':['deep house','deep electronic'],'tech house':['tech house','minimal house'],'house':['house music','underground house'],'techno':['techno','minimal techno'],'breakbeat':['breakbeat','breaks'],'drum and bass':['drum and bass','jungle'],'disco':['disco house','nu disco'],'hip hop':['underground hip hop','hip hop'],'trance':['trance','progressive trance'],'electronic':['electronic underground','electronic']};
-function dedup(items){let seen=new Set();return items.filter(t=>{if(t.kind!=='song'||!t.trackName||!t.artistName)return false;let k=norm(t.artistName)+'|'+norm(t.trackName);if(seen.has(k))return false;seen.add(k);return true})}
-function rank(t,refs,style,keywords,searchTerms){let artist=norm(t.artistName),title=norm(t.trackName),genre=norm(t.primaryGenreName),album=norm(t.collectionName),all=artist+' '+title+' '+genre+' '+album;let refTokens=refs.flatMap(r=>tokens(r.name));let matched=[...new Set(refTokens)].filter(w=>all.includes(w));let artistMatch=refs.some(r=>{let a=r.artist||r.name.split(/\s[-–—]\s/)[0];return a&&norm(a).length>3&&artist.includes(norm(a))});let styleTokens=tokens(style),styleMatch=styleTokens.filter(w=>all.includes(w)).length;let vibeMatch=keywords.filter(w=>all.includes(w)).length;let isCompilation=/various artists|greatest hits|top 100|best of|chart hits|now that/i.test(t.collectionName||'');let isReference=refs.some(r=>norm(r.name)===norm(t.trackName)||norm(r.name)===norm(t.artistName+' '+t.trackName));let score=styleMatch*2.5+Math.min(4,matched.length)*1.2+vibeMatch*1.6+(artistMatch?1.5:0)-(isCompilation?3:0);return {...t,_score:score,_matched:matched,_styleMatch:styleMatch,_vibeMatch:vibeMatch,_reference:isReference,_compilation:isCompilation}}
-function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent='Metadata candidate';flags.append(f);let a=document.createElement('a');a.textContent='Listen / view track';a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';info.append(name,artist,flags,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
-$('generate').onclick=async()=>{let raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return}let btn=$('generate');btn.disabled=true;$('status').className='muted status';$('status').textContent='Reading references…';$('resultSection').hidden=true;playlist=[];['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true);try{if(!$('style').value)throw Error('Please choose a genre or allow auto-detection to finish.');let refs=await Promise.all(raw.map(refInfo)),style=$('style').value,desired=+$('count').value,keywords=tokens($('texture').value),terms=[...new Set([...refs.map(r=>r.name),...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),style,...styleMap[style],style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,9);$('status').textContent='Searching via DJ Crate server…';let tasks=[];for(let term of terms.slice(0,5))for(let country of ['gb','us'])tasks.push({term,country});let {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent='Searching catalogue… '+n+'/'+total+' searches completed'});if(!found.length)throw Error('Music catalogue backend could not retrieve results. '+(errors[0]||'Unknown network error')+'. Please check the backend deployment.');let all=dedup(found.flatMap(r=>r.results||[])),ranked=all.map(t=>rank(t,refs,style,keywords,terms)).filter(t=>!t._reference);ranked.sort((a,b)=>b._score-a._score||a.artistName.localeCompare(b.artistName));let threshold=$('strict').checked?3:0;playlist=ranked.filter(t=>t._score>=threshold).slice(0,desired);if(!playlist.length)throw Error('No sufficiently close metadata matches. Try a broader style or turn off strict mode.');render();$('status').textContent=`Found ${playlist.length} catalogue candidates from ${all.length} unique tracks (${found.length}/${tasks.length} searches succeeded). Listen to verify the vibe; these are not audio-verified matches.`}catch(e){$('status').className='error status';$('status').textContent=e.message}finally{btn.disabled=false}};
+
+
+// Browser audio-signal comparison beta: user-supplied, permissioned files only.
+// Deliberately no platform ripping, no remote audio fetch and no false AI confidence.
+let audioMatches=[];
+async function fingerprintFile(file,ctx){
+ if(!file || file.size>45*1024*1024)throw Error('Select audio files under 45 MB each.');
+ const bytes=await file.arrayBuffer();
+ const buffer=await ctx.decodeAudioData(bytes);
+ const rate=buffer.sampleRate;
+ const maxSamples=Math.min(buffer.length,rate*65);
+ const mono=new Float32Array(maxSamples);
+ for(let c=0;c<Math.min(2,buffer.numberOfChannels);c++){
+   const x=buffer.getChannelData(c);
+   for(let i=0;i<maxSamples;i++)mono[i]+=x[i]/Math.min(2,buffer.numberOfChannels);
+ }
+ // Uniform analysis windows: RMS, low-frequency proxy via smoothed waveform, brightness via sample differences.
+ const windowSize=2048,windows=Math.floor(maxSamples/windowSize),energy=[],lowRatio=[],bright=[],peaks=[];
+ let meanRms=0,meanLow=0,meanBright=0,meanDynamics=0;
+ let low=0;const smooth=Math.max(2,Math.round(rate/175));
+ for(let w=0;w<windows;w++){
+  let e=0,le=0,diff=0,previous=0;
+  for(let j=0;j<windowSize;j++){
+   const x=mono[w*windowSize+j];e+=x*x;low+=((x-low)/smooth);le+=low*low;diff+=Math.abs(x-previous);previous=x;
+  }
+  const rms=Math.sqrt(e/windowSize),lr=Math.min(1,le/(e+1e-10)),br=diff/(windowSize*(rms+1e-4));
+  energy.push(rms);lowRatio.push(lr);bright.push(br);
+  meanRms+=rms;meanLow+=lr;meanBright+=br;
+ }
+ const n=Math.max(1,windows);meanRms/=n;meanLow/=n;meanBright/=n;
+ let variance=0;for(const x of energy)variance+=(x-meanRms)**2;
+ const dynamics=Math.sqrt(variance/n)/(meanRms+1e-5);
+ // Onset-envelope autocorrelation, only a rough BPM hint; double/half-time ambiguity.
+ const onset=[];for(let i=1;i<energy.length;i++)onset.push(Math.max(0,energy[i]-energy[i-1]));
+ const frameSec=windowSize/rate;let best=0,bestScore=0;
+ for(let bpm=75;bpm<=180;bpm++){
+  const lag=Math.round(60/(bpm*frameSec));if(lag>=onset.length)continue;
+  let score=0;for(let i=lag;i<onset.length;i++)score+=onset[i]*onset[i-lag];
+  score/=Math.max(1,onset.length-lag);
+  if(score>bestScore){bestScore=score;best=bpm}
+ }
+ const body=Math.max(0,Math.min(1,meanLow));
+ return {bass:body,brightness:Math.min(2,meanBright),energy:meanRms,dynamics:Math.min(4,dynamics),bpm:best||null,duration:buffer.duration};
+}
+function soundDistance(a,b){
+ const normDist=(x,y,scale)=>Math.min(1,Math.abs(x-y)/scale);
+ let diff=0;
+ diff+=normDist(a.bass,b.bass,.6)*.33;
+ diff+=normDist(a.brightness,b.brightness,1.1)*.23;
+ diff+=normDist(a.energy,b.energy,.3)*.15;
+ diff+=normDist(a.dynamics,b.dynamics,1.8)*.14;
+ if(a.bpm&&b.bpm){
+  const tempoDist=Math.min(Math.abs(a.bpm-b.bpm),Math.abs(a.bpm*2-b.bpm),Math.abs(a.bpm-b.bpm*2));
+  diff+=Math.min(1,tempoDist/38)*.15;
+ }
+ return Math.max(0,1-diff);
+}
+$('analyzeAudio').onclick=async()=>{
+ const ref=$('audioReference').files[0],candidates=[...$('audioCandidates').files].slice(0,12);
+ if(!ref||!candidates.length){$('audioStatus').textContent='Select one reference audio file and at least one candidate.';return;}
+ const button=$('analyzeAudio');button.disabled=true;$('audioCSV').disabled=true;
+ const output=$('audioResults');output.replaceChildren();audioMatches=[];
+ let ctx;
+ try{
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  $('audioStatus').textContent='Analysing reference audio on this device…';
+  const reference=await fingerprintFile(ref,ctx);
+  for(let i=0;i<candidates.length;i++){
+   $('audioStatus').textContent='Analysing audio '+(i+1)+'/'+candidates.length+'…';
+   try{const f=await fingerprintFile(candidates[i],ctx);
+     audioMatches.push({name:candidates[i].name,similarity:soundDistance(reference,f),bpm:f.bpm,bass:f.bass,energy:f.energy});
+   }catch(e){audioMatches.push({name:candidates[i].name,error:e.message,similarity:-1});}
+  }
+  audioMatches.sort((a,b)=>b.similarity-a.similarity);
+  for(const [i,t] of audioMatches.entries()){
+   const row=document.createElement('div');row.className='candidate-row';
+   const left=document.createElement('div');const name=document.createElement('strong');name.textContent=(i+1)+'. '+t.name;
+   const info=document.createElement('small');info.textContent=t.error?'Could not analyse: '+t.error:'Tempo estimate: '+(t.bpm||'unknown')+' BPM';
+   left.append(name,info);
+   const right=document.createElement('div');right.className='audio-score';right.textContent=t.error?'—':Math.round(t.similarity*100)+' / 100';
+   row.append(left,right);output.append(row);
+  }
+  $('audioStatus').textContent='Compared '+audioMatches.filter(t=>!t.error).length+' audio files. Scores reflect basic acoustic-feature similarity, not AI certainty or genre classification.';
+  $('audioCSV').disabled=!audioMatches.some(t=>!t.error);
+ }catch(e){$('audioStatus').textContent=e.message||'Could not decode audio file.'}
+ finally{if(ctx)await ctx.close().catch(()=>{});button.disabled=false;}
+};
+$('audioCSV').onclick=()=>{
+ if(!audioMatches.length)return;
+ saveCSV('DJ_Crate_Audio_Comparison.csv',[
+  ['Candidate audio file','Acoustic similarity score (0-100)','Estimated BPM','Notes'],
+  ...audioMatches.map(t=>[t.name,t.error?'':Math.round(t.similarity*100),t.bpm||'',t.error||'Local browser feature comparison; not AI genre recognition'])
+ ]);
+};
+
+const styleMap={
+'minimal house':['minimal house','microhouse','rominimal','minimal deep house'],
+'uk garage':['uk garage','2 step garage','speed garage','ukg'],
+'deep house':['deep house','underground deep house','soulful deep house'],
+'tech house':['tech house','minimal tech house'],
+'house':['house music','underground house','jackin house'],
+'techno':['techno','underground techno','hardgroove'],
+'breakbeat':['breakbeat','breaks','broken beat'],
+'drum and bass':['drum and bass','jungle','liquid drum and bass'],
+'disco':['disco','nu disco','disco house'],
+'hip hop':['hip hop','underground hip hop','boom bap'],
+'trance':['trance','progressive trance'],
+'electronic':['electronic','electronica','leftfield electronic']};
+function dedup(items){const seen=new Set();return items.filter(t=>{
+ if(t.kind!=='song'||!t.trackName||!t.artistName)return false;
+ const k=norm(t.artistName)+'|'+norm(t.trackName);
+ if(seen.has(k))return false;seen.add(k);return true;
+});}
+// Strict tag vocabulary: broad "Electronic" or "Dance" is NOT evidence of deep house.
+const genreEvidence={
+'minimal house':[/\bminimal[\s-]?house\b/i,/\bmicrohouse\b/i,/\brominimal\b/i,/\bminimal[\s-]?deep[\s-]?house\b/i],
+'uk garage':[/\buk[\s-]?garage\b/i,/\b2[\s-]?step\b/i,/\bspeed[\s-]?garage\b/i,/\bukg\b/i,/\bbassline[\s-]?garage\b/i],
+'deep house':[/\bdeep[\s-]?house\b/i,/\bsoulful[\s-]?house\b/i],
+'tech house':[/\btech[\s-]?house\b/i],
+'house':[/\bhouse\b/i,/\bjackin[\s-]?house\b/i],
+'techno':[/\btechno\b/i,/\bhardgroove\b/i],
+'breakbeat':[/\bbreakbeat\b/i,/\bbroken[\s-]?beat\b/i,/\bbreaks\b/i],
+'drum and bass':[/\bdrum[\s-]?(?:and|&|n)[\s-]?bass\b/i,/\bdnb\b/i,/\bjungle\b/i],
+'disco':[/\bdisco\b/i,/\bnu[\s-]?disco\b/i],
+'hip hop':[/\bhip[\s-]?hop\b/i,/\bboom[\s-]?bap\b/i,/\brap\b/i],
+'trance':[/\btrance\b/i,/\bpsytrance\b/i],
+'electronic':[/\belectronic\b/i,/\belectronica\b/i,/\bleftfield\b/i]};
+const broadOnly=/^(dance|electronic|pop|alternative|rock|r&b\/soul|hip-hop\/rap|world|instrumental|soundtrack|classical|country)$/i;
+const obviousFiller=/various artists|best of|greatest hits|top (?:40|50|100)|chart hits|workout|party anthems|fitness|karaoke|tribute/i;
+const genericTrack=/^(deep house|house|tech house|techno|minimal house|electronic|uk garage|disco|trance|drum and bass)(?:\s*[-–—]\s*(?:original|extended|radio) mix)?$/i;
+function genreMatchInfo(t,style){
+ const named=[t.primaryGenreName||'',t.collectionName||'',t.trackName||''];
+ const patterns=genreEvidence[style]||[];
+ let strong=patterns.some(p=>p.test(named[0])), context=patterns.some(p=>p.test(named[1]+' '+named[2]));
+ if(style==='house'){
+  // A deep/tech/minimal house explicitly tagged track can be included for general house.
+  strong=/\bhouse\b/i.test(named[0]);context=/\bhouse\b/i.test(named[1]+' '+named[2]);
+ }
+ if(style==='electronic'){
+  strong=/\belectronic|electronica\b/i.test(named[0]);context=patterns.some(p=>p.test(named[1]+' '+named[2]));
+ }
+ // Reject explicit contradictory styles, e.g. "tech house" for a deep-house request.
+ const otherStyles=Object.keys(genreEvidence).filter(g=>g!==style && g!=='electronic' && g!=='house');
+ const contradictory=otherStyles.some(g=>genreEvidence[g].some(p=>p.test(named.join(' '))));
+ if(style==='house'||style==='electronic')return {match:strong||context,level:strong?2:1,contradictory:false};
+ return {match:strong||context,level:strong?2:1,contradictory:contradictory&&!strong&&!context};
+}
+function rank(t,refs,style,keywords){
+ const artist=norm(t.artistName),track=norm(t.trackName),album=norm(t.collectionName),genre=String(t.primaryGenreName||'');
+ const meta=genreMatchInfo(t,style);
+ const refArtists=refs.map(r=>norm(r.artist||r.name.split(/\s[-–—]\s/)[0])).filter(a=>a.length>3);
+ const artistMatch=refArtists.some(a=>artist===a||artist.includes(a));
+ const refText=refs.map(r=>norm(r.name)).join(' ');
+ const refTerms=[...new Set(tokens(refText))].filter(w=>!['house','deep','tech','minimal','garage','electronic','music','original','version'].includes(w));
+ const refOverlap=refTerms.filter(w=>(artist+' '+track+' '+album).split(' ').includes(w)).length;
+ const vibeHits=keywords.filter(w=>(track+' '+album).includes(w)).length;
+ const reference=refs.some(r=>{const rn=norm(r.name);return rn===track||rn===artist+' '+track||rn.includes(artist+' '+track)});
+ const compilation=obviousFiller.test(t.collectionName||'')||obviousFiller.test(t.trackName||'');
+ const isGeneric=genericTrack.test(String(t.trackName||'').trim());
+ // A name like "Deep House" is not proof the music sounds like deep house.
+ const isGenreNameInTitleOnly=!meta.level||meta.level===1;
+ const incompatibleGenre=/^(pop|rock|country|classical|soundtrack|christian|children.s music|singer\/songwriter|comedy|spoken word)$/i.test(genre.trim());
+ const valid=meta.match&&!meta.contradictory&&!incompatibleGenre&&!reference&&!compilation&&!isGeneric;
+ const score=(meta.level===2?7:4)+(artistMatch?3:0)+Math.min(refOverlap,2)*1.5+Math.min(vibeHits,2)*1.5;
+ return {...t,_eligible:valid,_score:score,_metadataGenreLevel:meta.level,_artistMatch:artistMatch};
+}
+function diverseTop(results,desired){
+ const artists=new Set(),out=[];
+ for(const t of results){const artist=norm(t.artistName);if(artists.has(artist))continue;artists.add(artist);out.push(t);if(out.length>=desired)break}
+ return out;
+}
+function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent='Genre evidence · metadata only';flags.append(f);let a=document.createElement('a');a.textContent='Listen / view track';a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';info.append(name,artist,flags,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
+$('generate').onclick=async()=>{let raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return}let btn=$('generate');btn.disabled=true;$('status').className='muted status';$('status').textContent='Reading references…';$('resultSection').hidden=true;playlist=[];['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true);try{let refs=await Promise.all(raw.map(refInfo)),style=$('style').value,desired=+$('count').value,keywords=tokens($('texture').value),terms=[...new Set([...refs.map(r=>r.name),...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),style,...styleMap[style],style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,9);$('status').textContent='Searching via DJ Crate server…';let tasks=[];for(let term of terms.slice(0,5))for(let country of ['gb','us'])tasks.push({term,country});let {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent='Searching catalogue… '+n+'/'+total+' searches completed'});if(!found.length)throw Error('Music catalogue backend could not retrieve results. '+(errors[0]||'Unknown network error')+'. Please check the backend deployment.');let all=dedup(found.flatMap(r=>r.results||[])),ranked=all.map(t=>rank(t,refs,style,keywords,terms)).filter(t=>!t._reference);ranked.sort((a,b)=>b._score-a._score||a.artistName.localeCompare(b.artistName));let threshold=$('strict').checked?7:4;playlist=diverseTop(ranked.filter(t=>t._eligible&&t._score>=threshold),desired);if(!playlist.length)throw Error('Not enough tracks with convincing genre evidence. Try adding another reference or disabling strict mode; the crate will not include unrelated genres.');render();$('status').textContent=`Selected ${playlist.length} different-producer candidates from ${all.length} searched tracks (${found.length}/${tasks.length} searches succeeded). Listen to verify the vibe; these are not audio-verified matches.`}catch(e){$('status').className='error status';$('status').textContent=e.message}finally{btn.disabled=false}};
 $('clear').onclick=()=>{$('refs').value='';$('texture').value='';$('status').textContent='';$('resultSection').hidden=true;playlist=[];['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true)};
 function exportPlatform(platform){if(!playlist.length)return;let rows=[['Artist','Title','Album','ISRC','Source URL'],...playlist.map(t=>[t.artistName,t.trackName,t.collectionName,t.isrc||'',t.trackViewUrl||''])];saveCSV('DJ_Crate_'+platform+'_Soundiiz_Import.csv',rows)}$('soundcloud').onclick=()=>exportPlatform('SoundCloud');$('spotify').onclick=()=>exportPlatform('Spotify');$('usb').onclick=()=>{let rows=[['Position','Artist','Track','Album','Catalogue reference URL','Audio file acquired legally?','Local filename','Rekordbox checked?'],...playlist.map((t,i)=>[i+1,t.artistName,t.trackName,t.collectionName,t.trackViewUrl||'','NO','','NO'])];saveCSV('DJ_Crate_USB_Purchase_And_Rekordbox_Checklist.csv',rows)};
 </script></body></html>
-
