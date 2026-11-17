@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#090b10" name="theme-color"/><title>DJ Crate V8.5 — Genre Picker and SoundCloud Login</title><style>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#090b10" name="theme-color"/><title>DJ Crate V8.7 — Unified Discovery</title><style>
 :root{color-scheme:dark;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#090b10;color:#f4f3fa;--purple:#ad83ff;--muted:#9a9ba9;--border:#292b36;--panel:#12141d}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse 70% 25% at 80% 5%,rgba(105,53,188,.22),transparent 70%),#090b10;color:#f4f3fa}
 .topbar{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:23px 25px;border-bottom:1px solid rgba(255,255,255,.09)}.brand{font-size:16px;font-weight:900;letter-spacing:.1em;display:flex;align-items:center;gap:10px}.brandmark{display:inline-grid;place-items:center;width:34px;height:34px;background:#a87dff;color:#0b0811;border-radius:10px;font-size:26px}.brandaccent{color:#ac82ff}.topright{font-size:10px;font-weight:800;letter-spacing:.18em;color:#9a9baa;display:flex;align-items:center;gap:9px}.live-dot{width:7px;height:7px;background:#8ef6b7;box-shadow:0 0 12px #8ef6b7;border-radius:50%}.version{border:1px solid #454053;padding:6px 8px;border-radius:6px;color:#d8c3ff}
@@ -11,24 +11,19 @@ main{max-width:1040px;margin:auto;padding:70px 24px 80px;position:relative}.hero
 
 /* Fast mobile-first genre picker: hidden original select remains source of truth. */
 .genre-picker{position:relative;margin-top:9px}.genre-trigger{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between;text-align:left;border:1px solid #605071;border-radius:13px;background:#15121e;color:#f6ecff;padding:13px 15px;font-size:14px}.genre-trigger:hover{background:#211b2d}.genre-trigger>span{flex:1;min-width:0}.genre-chevron{opacity:.8}.genre-panel{margin-top:10px;border:1px solid #574563;background:#15121f;border-radius:15px;padding:14px;box-shadow:0 12px 24px #0004}.genre-search{margin:0 0 11px!important}.genre-picks{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 15px}.genre-chip{min-height:36px;padding:8px 11px;border-radius:100px;background:#2c2338!important;border:1px solid #5e4a71!important;color:#f3e7fd!important;font-size:12px!important}.genre-chip.active{background:#b98bec!important;color:#1b1024!important}.genre-families{display:grid;gap:7px;max-height:350px;overflow-y:auto;overscroll-behavior:contain}.genre-family{border:1px solid #3b3248;border-radius:11px;overflow:hidden;background:#1b1725}.genre-family>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:13px;cursor:pointer;font-size:13px;font-weight:700}.genre-family>summary::-webkit-details-marker{display:none}.genre-family>summary::after{content:'+';color:#d4b7f8;font-size:18px}.genre-family[open]>summary::after{content:'−'}.genre-family-items{display:flex;flex-wrap:wrap;gap:7px;padding:0 12px 13px}.genre-option{background:#282033!important;color:#efdefa!important;border:1px solid #554268!important;padding:10px 12px!important;min-height:38px;font-size:12px!important;border-radius:9px!important}.genre-option[aria-pressed=true]{background:#b58bef!important;color:#130d20!important}.genre-hint{font-size:11px;color:#aaa0b6;line-height:1.55;margin:10px 0 0}.genre-native{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}.genre-picker button{transform:none!important}.genre-picker button:focus-visible{outline:2px solid #d2a8ff;outline-offset:2px}@media(max-width:640px){.genre-panel{padding:12px}.genre-families{max-height:310px}}
- .sc-account-bar{max-width:1040px;margin:15px auto 0;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #483a57;border-radius:14px;background:#17121f}.sc-account-bar strong{font-size:14px}.sc-account-bar p{margin:6px 0 0}.sc-account-actions{flex-shrink:0}.sc-account-bar [hidden]{display:none!important}@media(max-width:640px){.sc-account-bar{margin:12px 16px 0;flex-direction:column;align-items:stretch}.sc-account-actions .button,.sc-account-actions button{width:100%}} </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.6</span></div></header><div class="sc-account-bar"><div><strong>Connect your SoundCloud</strong><p id="scLoginInfo" class="muted">Checking account connection…</p></div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></div><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.6</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><div class="hero-tags"><span>01 / REFERENCE LED</span><span>02 / REAL CATALOGUE RESULTS</span><span>03 / EXPORT READY</span></div><section class="panel panel-main"><h2>01  /  Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
-Or type: Artist — Track Name"></textarea><p class="muted">Up to five references. Public SoundCloud links can be identified by metadata; private links may require artist and title. Audio is not analysed.</p><div class="grid"><div><label for="genreButton">Sound / subgenre</label>
+ .sc-account-bar{max-width:1040px;margin:15px auto 0;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #483a57;border-radius:14px;background:#17121f}.sc-account-bar strong{font-size:14px}.sc-account-bar p{margin:6px 0 0}.sc-account-actions{flex-shrink:0}.sc-account-bar [hidden]{display:none!important}@media(max-width:640px){.sc-account-bar{margin:12px 16px 0;flex-direction:column;align-items:stretch}.sc-account-actions .button,.sc-account-actions button{width:100%}} 
+.source-title{font-size:17px;letter-spacing:-.02em;margin:18px 0 8px}.source-title .muted{font-weight:400;font-size:12px}.source-section{border-top:1px solid #3b3449;margin-top:24px;padding-top:15px}.source-section .track:last-child{border-bottom:0}
+</style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.7</span></div></header><div class="sc-account-bar"><div><strong>Connect your SoundCloud</strong><p id="scLoginInfo" class="muted">Checking account connection…</p></div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></div><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.7</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><div class="hero-tags"><span>01 / REFERENCE LED</span><span>02 / REAL CATALOGUE RESULTS</span><span>03 / EXPORT READY</span></div><section class="panel panel-main"><h2>01  /  Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
+Or type: Artist — Track Name"></textarea><p class="muted">One input for both discovery sources. Paste up to five public SoundCloud links or artist — track names. SoundCloud search activates when approved API credentials are configured. Private links may require artist and title; streamed audio is not analysed.</p><div class="grid"><div><label for="genreButton">Sound / subgenre</label>
 <div class="genre-picker" id="genrePicker"><select id="style" class="genre-native" aria-label="Selected primary genre"><option value="minimal house">Minimal / rolling house</option><option value="uk garage">UK garage</option><option value="deep house">Deep house</option><option value="tech house">Tech house</option><option value="house">House</option><option value="techno">Techno</option><option value="breakbeat">Breakbeat</option><option value="drum and bass">Drum &amp; bass</option><option value="disco">Disco / funky</option><option value="hip hop">Hip-hop</option><option value="trance">Trance</option><option value="electronic">Other electronic</option></select>
 <button type="button" id="genreButton" class="genre-trigger" aria-expanded="false" aria-controls="genrePanel"><span id="selectedGenre">Minimal / rolling house</span><span class="genre-chevron">⌄</span></button>
-<div id="genrePanel" class="genre-panel" hidden><input type="search" id="genreSearch" class="genre-search" placeholder="Search any genre…" aria-label="Search music genres"/><p class="muted" style="margin:0">Quick picks</p><div id="genreQuick" class="genre-picks"></div><div id="genreFamilies" class="genre-families"></div><p class="genre-hint">Choose a subgenre in two taps, or type its name. Specific subgenres use strict matching — fewer results may be available.</p></div></div></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict genre: require evidence for the chosen style and avoid repeat artists</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>02  /  Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>strictly filtered metadata candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><p class="muted" id="discoveryAudit" aria-live="polite"></p><div id="results"></div></section><section class="panel" id="audioPanel"><h2>03 / Listen &amp; compare audio <span class="version">BETA</span></h2>
+<div id="genrePanel" class="genre-panel" hidden><input type="search" id="genreSearch" class="genre-search" placeholder="Search any genre…" aria-label="Search music genres"/><p class="muted" style="margin:0">Quick picks</p><div id="genreQuick" class="genre-picks"></div><div id="genreFamilies" class="genre-families"></div><p class="genre-hint">Choose a subgenre in two taps, or type its name. Specific subgenres use strict matching — fewer results may be available.</p></div></div></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict genre: require evidence for the chosen style and avoid repeat artists</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted" id="scState" aria-live="polite">Checking SoundCloud discovery availability…</p><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>02  /  Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>metadata-based discovery candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><p class="muted" id="discoveryAudit" aria-live="polite"></p><h3 class="source-title">Music catalogue suggestions <span class="muted">· metadata-based</span></h3><div id="results"></div><div class="source-section"><h3 class="source-title">SoundCloud discoveries <span class="muted">· public uploads</span></h3><p id="scMessage" class="muted" role="status"></p><div id="scResults"></div></div></section><section class="panel" id="audioPanel"><h2>03 / Listen &amp; compare audio <span class="version">BETA</span></h2>
 <p class="muted">Compare real audio you are allowed to analyse. Upload one reference and several candidate files. DJ Crate analyses audio locally on your phone, then ranks candidates by their musical characteristics. <b>This is audio signal analysis, not a trained AI recognition model</b>; it is separate from the streaming catalogue.</p>
 <div class="audio-grid"><div class="audio-drop"><label for="audioReference">Reference audio</label><input type="file" id="audioReference" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">One file you have permission to analyse.</p></div>
 <div class="audio-drop"><label for="audioCandidates">Candidate audio files</label><input type="file" id="audioCandidates" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">Select up to 12 tracks to compare.</p></div></div>
 <div class="actions"><button id="analyzeAudio" class="secondary">Analyse and compare audio</button><button id="audioCSV" disabled class="secondary">Download comparison CSV</button></div>
 <p id="audioStatus" class="muted status" role="status"></p><div id="audioResults"></div>
-<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or actual 90% sound similarity.</p></section><section class="panel"><h2>04 / SoundCloud discovery <span style="font-size:11px;color:#c29cec">BETA / PREPARED</span></h2>
-<p class="muted">An additional SoundCloud public-track search can be enabled once your replacement API credentials are stored safely in Netlify. This is separate from the Apple-backed recommendations above.</p>
-<p id="scState" class="muted">Checking SoundCloud integration status…</p>
-<div class="grid"><div><label for="scQuery">Search SoundCloud tracks</label><input id="scQuery" placeholder="e.g. rolling underground house"></div><div><label for="scGenre">Genre tag (optional)</label><input id="scGenre" placeholder="e.g. Deep House"></div></div>
-<div class="actions"><button id="scSearch" class="secondary" disabled>Search SoundCloud</button></div>
-<p id="scMessage" class="muted" role="status"></p><div id="scResults"></div>
-<p class="muted">Track tags vary, and this search does not listen to audio. Matching the selected genre is not guaranteed. Opening results takes you to the original SoundCloud upload.</p>
-</section><section class="panel"><h2>05  /  Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, then searches Apple's public music catalogue in multiple markets using the reference artist/title and chosen subgenre. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.6 / BETA</span></footer></main><script>
+<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or actual 90% sound similarity.</p></section><section class="panel"><h2>04  /  Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, searches Apple's public music catalogue, and — when approved API credentials are configured — separately searches SoundCloud public uploads using the same reference and genre fields. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.7 / BETA</span></footer></main><script>
 const $=id=>document.getElementById(id);
 async function loadSoundCloudAccount(){
  const label=$('scLoginInfo'),login=$('scLogin'),logout=$('scDisconnect');
@@ -49,29 +44,74 @@ if(scResult){const messages={connected:'Your SoundCloud account is connected.',d
 const msg=messages[scResult];if(msg){document.addEventListener('DOMContentLoaded',()=>{$('scLoginInfo').textContent=msg})}}
 loadSoundCloudAccount();
 
+let soundCloudDiscoveryConfigured=false;
 async function updateSoundCloudStatus(){
- try{const response=await fetch('/api/soundcloud/status');if(!response.ok)throw Error('Status unavailable');
- const data=await response.json();
- $('scState').textContent=data.message||'SoundCloud status unknown.';
- $('scSearch').disabled=!data.configured;
- }catch{$('scState').textContent='SoundCloud connection is not deployed yet. The existing discovery engine still works.';}
+ try{
+  const response=await fetch('/api/soundcloud/status',{cache:'no-store'});
+  if(!response.ok)throw Error('Status unavailable');
+  const data=await response.json();
+  soundCloudDiscoveryConfigured=!!data.configured;
+  $('scState').textContent=soundCloudDiscoveryConfigured?
+   'One search now checks the music catalogue and public SoundCloud uploads using your selected genre. SoundCloud uploader tags are not audio-verified.':
+   'Music catalogue search is ready. SoundCloud public-upload discovery will join the same results once replacement API credentials are configured.';
+ }catch{
+  soundCloudDiscoveryConfigured=false;
+  $('scState').textContent='Music catalogue search is ready. SoundCloud discovery is not available yet.';
+ }
 }
-$('scSearch').onclick=async()=>{
- const query=$('scQuery').value.trim(),genre=$('scGenre').value.trim(),out=$('scResults');
- if(query.length<2){$('scMessage').textContent='Type at least two characters to search.';return;}
- $('scSearch').disabled=true;out.replaceChildren();$('scMessage').textContent='Searching public SoundCloud tracks…';
- try{let response=await fetch('/api/soundcloud/search?'+new URLSearchParams({q:query,genre}));
- const data=await response.json();if(!response.ok)throw Error(data.error||'SoundCloud search failed');
- $('scMessage').textContent=data.items.length+' track candidates from SoundCloud. Tags are not audio-verified matches.';
- for(const t of data.items){const row=document.createElement('div');row.className='track';
- const art=document.createElement('img');art.src=t.artwork||'';art.alt='';art.loading='lazy';
- const info=document.createElement('div');info.className='details';
- const name=document.createElement('strong');name.textContent=t.title;
- const artist=document.createElement('div');artist.className='muted';artist.textContent=t.artist+' · '+(t.genre||'Unspecified genre');
- const link=document.createElement('a');link.textContent='Open on SoundCloud';link.href=t.url;link.target='_blank';link.rel='noopener noreferrer';
- info.append(name,artist,link);row.append(art,info);out.append(row);}
- }catch(e){$('scMessage').textContent=e.message}finally{$('scSearch').disabled=false;}
-};
+// The SoundCloud API search is deliberately separate from the Apple metadata search.
+// The same references, genre and vibe are shared, but sources are never mislabeled.
+async function searchSoundCloudFromReferences(refs,style,desired,keywords){
+ const out=$('scResults');out.replaceChildren();
+ if(!soundCloudDiscoveryConfigured){
+  $('scMessage').textContent='SoundCloud API access is pending. Music catalogue results above are still available.';
+  return;
+ }
+ $('scMessage').textContent='Searching SoundCloud public uploads…';
+ const genre=genreSubfocus||style;
+ const artist=String(refs[0]?.artist||'').trim();
+ const queries=[...new Set([artist?`${artist} ${genre}`:'',
+   `${genre} ${keywords.slice(0,2).join(' ')}`.trim(),genre].filter(q=>q.length>=2))].slice(0,3);
+ const responses=await Promise.allSettled(queries.map(async q=>{
+  const response=await fetch('/api/soundcloud/search?'+new URLSearchParams({q,genre}));
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw Error(data.error||'SoundCloud search failed');
+  return data.items||[];
+ }));
+ const tracks=responses.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
+ const seenTracks=new Set(),seenArtists=new Set(),unique=[];
+ for(const t of tracks){
+  const key=String(t.id||t.url||'');
+  const artistKey=String(t.artistId||t.artist||'').toLowerCase().trim();
+  if(!key||seenTracks.has(key)||seenArtists.has(artistKey))continue;
+  const isRef=refs.some(r=>{
+   const title=norm(r.name||'');
+   return title&&title===norm(t.title)||title===norm(`${t.artist} ${t.title}`);
+  });
+  if(isRef)continue;
+  seenTracks.add(key);seenArtists.add(artistKey);unique.push(t);
+  if(unique.length>=desired)break;
+ }
+ if(!unique.length){
+  const firstError=responses.find(r=>r.status==='rejected');
+  $('scMessage').textContent=firstError&&responses.every(r=>r.status==='rejected')?
+   'SoundCloud discovery is unavailable: '+String(firstError.reason?.message||'request failed'):
+   'No public SoundCloud tracks had matching uploader genre tags. Try a broader genre or another reference.';
+  return;
+ }
+ $('scMessage').textContent=`${unique.length} public SoundCloud candidates from different uploaders. Genre is based on uploader tags, not audio analysis.`;
+ for(const t of unique){
+  const row=document.createElement('div');row.className='track';
+  const art=document.createElement('img');art.src=t.artwork||'';art.alt='';art.loading='lazy';
+  const info=document.createElement('div');info.className='details';
+  const name=document.createElement('strong');name.textContent=t.title;
+  const artistNode=document.createElement('div');artistNode.className='muted';
+  artistNode.textContent=t.artist+' · '+(t.genre||'Unspecified uploader genre');
+  const link=document.createElement('a');link.textContent='Open on SoundCloud';
+  link.href=t.url;link.target='_blank';link.rel='noopener noreferrer';
+  info.append(name,artistNode,link);row.append(art,info);out.append(row);
+ }
+}
 updateSoundCloudStatus();
 let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
 
@@ -342,10 +382,49 @@ function diverseTop(results,desired){
  return out;
 }
 function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent=t._metadataGenreLevel===3?'Catalogue genre tag':'Release-title genre hint';flags.append(f);let a=document.createElement('a');a.textContent='Listen / view track';a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';info.append(name,artist,flags,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
-$('generate').onclick=async()=>{let raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return}let btn=$('generate');btn.disabled=true;$('status').className='muted status';$('status').textContent='Reading references…';$('resultSection').hidden=true;playlist=[];['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true);try{let refs=await Promise.all(raw.map(refInfo)),style=$('style').value,desired=+$('count').value,keywords=tokens($('texture').value),terms=[...new Set([...(genreSubfocus?[genreSubfocus,genreSubfocus+' '+(refs[0]?.artist||'')]:[]),...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),...styleMap[style],...refs.map(r=>r.name),style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,12);$('status').textContent='Searching via DJ Crate server…';let tasks=[];for(let term of terms.slice(0,7))for(let country of ['gb','us'])tasks.push({term,country});let {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent='Searching catalogue… '+n+'/'+total+' searches completed'});if(!found.length)throw Error('Music catalogue backend could not retrieve results. '+(errors[0]||'Unknown network error')+'. Please check the backend deployment.');let all=dedup(found.flatMap(r=>r.results||[])),ranked=all.map(t=>rank(t,refs,style,keywords,terms)).filter(t=>!t._reference);ranked.sort((a,b)=>b._score-a._score||a.artistName.localeCompare(b.artistName));let threshold=$('strict').checked?12:8;
-playlist=diverseTop(ranked.filter(t=>t._eligible&&t._score>=threshold),desired);
-const rejected=ranked.filter(t=>!t._eligible).length;
-$('discoveryAudit').textContent=`Strict genre filtering: ${rejected} results excluded as irrelevant, ambiguous, compilation or duplicate-reference candidates. The genre labels come from catalogue metadata and release titles, not audio recognition.`;if(!playlist.length)throw Error('Not enough genre-confirmed tracks for that selection. Try a broader genre or add another reference. We will avoid unrelated filler.');render();$('status').textContent=`Selected ${playlist.length} different-producer candidates from ${all.length} searched tracks (${found.length}/${tasks.length} searches succeeded). Listen to verify the vibe; these are not audio-verified matches.`}catch(e){$('status').className='error status';$('status').textContent=e.message}finally{btn.disabled=false}};
-$('clear').onclick=()=>{$('refs').value='';$('texture').value='';$('status').textContent='';$('resultSection').hidden=true;playlist=[];['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true)};
+$('generate').onclick=async()=>{
+ const raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);
+ if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return;}
+ const btn=$('generate');btn.disabled=true;
+ $('status').className='muted status';$('status').textContent='Reading references…';
+ $('resultSection').hidden=true;playlist=[];
+ $('scResults').replaceChildren();$('scMessage').textContent='';
+ ['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true);
+ try{
+  const refs=await Promise.all(raw.map(refInfo));
+  const style=$('style').value,desired=+$('count').value,keywords=tokens($('texture').value);
+  $('resultSection').hidden=false;
+  // Launch SoundCloud discovery immediately, but do not let an API error block other results.
+  const soundCloudTask=searchSoundCloudFromReferences(refs,style,desired,keywords).catch(e=>{
+   $('scMessage').textContent='SoundCloud discovery failed: '+String(e.message||e);
+  });
+  try{
+   const terms=[...new Set([...(genreSubfocus?[genreSubfocus,genreSubfocus+' '+(refs[0]?.artist||'')]:[]),
+    ...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),...styleMap[style],
+    ...refs.map(r=>r.name),style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,12);
+   $('status').textContent='Searching music catalogue…';
+   const tasks=[];for(const term of terms.slice(0,7))for(const country of ['gb','us'])tasks.push({term,country});
+   const {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent=`Searching catalogue… ${n}/${total} searches completed`;});
+   if(!found.length)throw Error('Music catalogue could not retrieve results. '+(errors[0]||'Please check the backend deployment.'));
+   const all=dedup(found.flatMap(r=>r.results||[]));
+   const ranked=all.map(t=>rank(t,refs,style,keywords)).filter(t=>!t._reference);
+   ranked.sort((a,b)=>b._score-a._score||a.artistName.localeCompare(b.artistName));
+   const threshold=$('strict').checked?12:8;
+   playlist=diverseTop(ranked.filter(t=>t._eligible&&t._score>=threshold),desired);
+   const rejected=ranked.filter(t=>!t._eligible).length;
+   $('discoveryAudit').textContent=`${rejected} catalogue results excluded for uncertain or conflicting metadata. Catalogue genre and SoundCloud uploader tags are not audio recognition.`;
+   if(playlist.length){render();$('status').textContent=`Found ${playlist.length} music catalogue candidates from different producers. SoundCloud results appear below when available.`;}
+   else{$('results').replaceChildren();$('total').textContent='';$('status').textContent='No sufficiently genre-matched music catalogue results. SoundCloud results may still appear below.';}
+  }catch(e){
+   $('results').replaceChildren();$('total').textContent='';
+   $('status').className='error status';
+   $('status').textContent='Music catalogue: '+String(e.message||e)+'. SoundCloud discovery may still work.';
+  }
+  await soundCloudTask;
+ }catch(e){
+  $('resultSection').hidden=true;$('status').className='error status';$('status').textContent=String(e.message||e);
+ }finally{btn.disabled=false;}
+};
+$('clear').onclick=()=>{$('refs').value='';$('texture').value='';$('status').textContent='';$('resultSection').hidden=true;playlist=[];$('scResults').replaceChildren();$('scMessage').textContent='';['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true)};
 function exportPlatform(platform){if(!playlist.length)return;let rows=[['Artist','Title','Album','ISRC','Source URL'],...playlist.map(t=>[t.artistName,t.trackName,t.collectionName,t.isrc||'',t.trackViewUrl||''])];saveCSV('DJ_Crate_'+platform+'_Soundiiz_Import.csv',rows)}$('soundcloud').onclick=()=>exportPlatform('SoundCloud');$('spotify').onclick=()=>exportPlatform('Spotify');$('usb').onclick=()=>{let rows=[['Position','Artist','Track','Album','Catalogue reference URL','Audio file acquired legally?','Local filename','Rekordbox checked?'],...playlist.map((t,i)=>[i+1,t.artistName,t.trackName,t.collectionName,t.trackViewUrl||'','NO','','NO'])];saveCSV('DJ_Crate_USB_Purchase_And_Rekordbox_Checklist.csv',rows)};
 </script></body></html>
