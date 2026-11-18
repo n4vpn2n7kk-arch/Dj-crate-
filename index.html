@@ -89,7 +89,7 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
       <strong id="scAccountName">SoundCloud</strong>
       <p id="scLoginInfo" class="muted" role="status">Checking connection…</p>
     </div>
-  </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.9</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><div id="selectedReferences" aria-label="Selected reference tracks"></div><textarea id="refs" placeholder="Paste a SoundCloud track URL…
+  </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.10</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><div id="selectedReferences" aria-label="Selected reference tracks"></div><textarea id="refs" placeholder="Paste a SoundCloud track URL…
 Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
  <summary>My SoundCloud Likes</summary>
  <div id="likesNavigation" class="sc-likes-body" role="group" aria-label="SoundCloud likes view">
@@ -126,7 +126,7 @@ Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
 <div class="audio-drop"><label for="audioCandidates">Candidate audio files</label><input type="file" id="audioCandidates" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">Select up to 12 tracks to compare.</p></div></div>
 <div class="actions"><button id="analyzeAudio" class="secondary">Analyse and compare audio</button><button id="audioCSV" disabled class="secondary">Download comparison CSV</button></div>
 <p id="audioStatus" class="muted status" role="status"></p><div id="audioResults"></div>
-<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or a verified sound similarity percentage.</p></section><section class="panel export-panel"><h2>Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, searches Apple's public music catalogue, and — when approved API credentials are configured — separately searches SoundCloud public uploads using the same reference and genre fields. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The sliders adjust ranking preferences. Popularity uses SoundCloud play counts when available. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.9 / BETA</span></footer></main><script>
+<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or a verified sound similarity percentage.</p></section><section class="panel export-panel"><h2>Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, searches Apple's public music catalogue, and — when approved API credentials are configured — separately searches SoundCloud public uploads using the same reference and genre fields. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The sliders adjust ranking preferences. Popularity uses SoundCloud play counts when available. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.10 / BETA</span></footer></main><script>
 const $=id=>document.getElementById(id);
 const scAvatar = $('scAvatar');
 scAvatar.addEventListener('error', () => { scAvatar.hidden = true; });
@@ -396,16 +396,19 @@ async function searchSoundCloudFromReferences(refs,style,keywords,subfocus,examp
  const genre=subfocus||style;
  const artist=String(refs[0]?.artist||'').trim();
  const referenceGenre=sharedGenreTerms(refs,style)[0];
- const queries=[...new Set([genre,artist?`${artist} ${genre}`:'',
+ const aliases=subfocus?(subgenreAliases[subfocus]||[]):(styleMap[style]||[]);
+ const genreQueries=[...new Set([genre,...aliases])].slice(0,4);
+ const queries=[...new Set([artist?`${artist} ${genre}`:'',
    `${genre} ${keywords.slice(0,2).join(' ')}`.trim(),referenceGenre].filter(q=>q&&q.length>=2&&q.length<=100))].slice(0,4);
- async function search(q){
-  const response=await fetch('/.netlify/functions/soundcloud-search?'+new URLSearchParams({q,genre}));
+ async function search(q,pages=1){
+  const response=await fetch('/.netlify/functions/soundcloud-search?'+new URLSearchParams({q,genre,pages:String(pages)}));
   const data=await response.json().catch(()=>({}));
   if(!response.ok)throw Error(data.error||`SoundCloud search failed (HTTP ${response.status})`);
   if(!Array.isArray(data.items))throw Error('Unexpected SoundCloud search response');
   return data.items;
  }
- const responses=await Promise.allSettled(queries.map(search));
+ const responses=await Promise.allSettled(genreQueries.map(query=>search(query,2)));
+ responses.push(...await Promise.allSettled(queries.filter(query=>!genreQueries.includes(query)).map(query=>search(query))));
  for(let index=0;index<examples.length;index+=3){
   const batch=examples.slice(index,index+3).map(([name,title])=>search(name+' '+title));
   responses.push(...await Promise.allSettled(batch));
@@ -416,7 +419,7 @@ async function searchSoundCloudFromReferences(refs,style,keywords,subfocus,examp
   const candidate={trackName:track.title,artistName:track.artist,primaryGenreName:track.genre,tags:track.tags};
   return photoTrackMatch(candidate,[example]).exact&&rank(candidate,[],style,[],{vibe:0,overplayed:0},subfocus,[]);
  })).slice(0,3).map(([name])=>name+' '+genre);
- responses.push(...await Promise.allSettled(relatedQueries.map(search)));
+ responses.push(...await Promise.allSettled(relatedQueries.map(query=>search(query))));
  const tracks=responses.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
  const seenTracks=new Set(),unique=[];
  for(const t of tracks){
@@ -882,7 +885,7 @@ $('generate').onclick=async()=>{
   }catch(e){
    $('discoveryAudit').textContent='Apple Music search unavailable: '+String(e.message||e);
   }
-  $('status').textContent='Finishing recommendations…';
+  $('status').textContent='Checking more SoundCloud tracks…';
   playlist=rankRecommendations([...(await soundCloudTask),...appleMusic],refs,style,keywords,strict,desired,preferences,subfocus,examples);
   render();
   renderArtistDiscoveries();
