@@ -64,6 +64,11 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
 @media (hover:hover) { .sc-like-row:hover { background:#422735; } }
 
 .match-reason { margin:5px 0; line-height:1.4; }
+#selectedReferences { display:grid; gap:8px; margin-bottom:8px; }
+#likesNavigation { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+#likesNavigation select { flex:1; margin:0; }
+#likesBack { min-height:44px; }
+#selectedReferences .sc-like-row { background:#2c223c; }
 </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.8</span></div></header><section class="sc-account-bar" aria-label="SoundCloud account">
   <div class="sc-profile">
     <div class="sc-avatar" aria-hidden="true">
@@ -74,11 +79,12 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
       <strong id="scAccountName">SoundCloud</strong>
       <p id="scLoginInfo" class="muted" role="status">Checking connection…</p>
     </div>
-  </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.8</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
+  </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.8</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><div id="selectedReferences" aria-label="Selected reference tracks"></div><textarea id="refs" placeholder="Paste a SoundCloud track URL…
 Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
  <summary>My SoundCloud Likes</summary>
+ <div id="likesNavigation" class="sc-likes-body"><select id="likesKind" aria-label="SoundCloud likes view"><option value="tracks">Liked tracks</option><option value="playlists">Liked playlists</option></select><button type="button" id="likesBack" class="secondary" hidden>Back to playlists</button></div>
  <div class="sc-likes-body">
- <p class="muted">Tap Add to references or drag a track into the reference box.</p>
+ <p class="muted">Open a playlist to browse its tracks, then tap Add or drag a track into the reference box.</p>
  <p id="scLikesStatus" class="muted" role="status"></p>
  <div id="scLikesList"></div>
  <button type="button" id="scLikesMore" class="secondary" hidden>Load more</button>
@@ -111,6 +117,9 @@ async function loadSoundCloudAccount() {
  $('scLikesMore').hidden = true;
  likesLoaded = false;
  likesCursor = null;
+ activePlaylist = null;
+ $('likesKind').value = 'tracks';
+ $('likesBack').hidden = true;
  $('scAccountName').textContent = 'SoundCloud';
  $('scAvatarFallback').textContent = 'SC';
  scAvatar.hidden = true;
@@ -170,82 +179,117 @@ $('scDisconnect').onclick = async () => {
 let likesLoaded = false;
 let likesCursor = null;
 let likesLoading = false;
+let activePlaylist = null;
+const selectedTracks = new Map();
 const likesPicker = $('scLikes');
 const referenceInput = $('refs');
 const likesDragType = 'application/x-dj-crate-soundcloud';
 
-function addLikedReference(url) {
- const references = referenceInput.value.split('\n').map(line => line.trim()).filter(Boolean);
- const trackKey = value => value.split(/[?#]/, 1)[0].replace(/\/$/, '');
- const status = $('scLikesStatus');
- if (references.some(reference => trackKey(reference) === trackKey(url))) {
-  status.textContent = 'That track is already in your references.';
- } else if (references.length >= 5) {
-  status.textContent = 'All five reference slots are in use. Remove one to add this track.';
- } else {
-  references.push(url);
-  referenceInput.value = references.join('\n');
-  status.textContent = 'Added to references (' + references.length + '/5).';
- }
+function manualReferences() {
+ return referenceInput.value.split('\n').map(line => line.trim()).filter(Boolean);
 }
-
+function trackKey(value) {
+ return value.replace(/^https?:\/\/(?:www\.|m\.)?soundcloud\.com\//i, 'https://soundcloud.com/')
+  .split(/[?#]/, 1)[0].replace(/\/$/, '');
+}
+function referenceRow(track, action, onClick) {
+ const row = document.createElement('div');
+ row.className = 'sc-like-row';
+ const artwork = document.createElement('span');
+ artwork.className = 'sc-like-art';
+ artwork.setAttribute('aria-hidden', 'true');
+ artwork.textContent = '♫';
+ if (track.artwork) {
+  const image = document.createElement('img');
+  image.alt = '';
+  image.loading = 'lazy';
+  image.onerror = () => image.remove();
+  image.src = track.artwork;
+  artwork.append(image);
+ }
+ const label = document.createElement('span');
+ const title = document.createElement('strong');
+ title.className = 'sc-like-title';
+ title.textContent = track.title;
+ const artist = document.createElement('span');
+ artist.className = 'sc-like-artist';
+ artist.textContent = track.artist || '';
+ label.append(title, artist);
+ const button = document.createElement('button');
+ button.type = 'button';
+ button.className = 'secondary';
+ button.textContent = action;
+ button.setAttribute('aria-label', action + ' ' + track.title);
+ button.onclick = onClick;
+ row.append(artwork, label, button);
+ return row;
+}
+function addLikedReference(track) {
+ const key = trackKey(track.url);
+ const manual = manualReferences();
+ const status = $('scLikesStatus');
+ if (selectedTracks.has(key) || manual.some(reference => trackKey(reference) === key)) {
+  status.textContent = 'That track is already in your references.';
+  return;
+ }
+ if (selectedTracks.size + manual.length >= 5) {
+  status.textContent = 'All five reference slots are in use. Remove one to add this track.';
+  return;
+ }
+ selectedTracks.set(key, track);
+ const card = referenceRow(track, 'Remove', () => {
+  selectedTracks.delete(key);
+  card.remove();
+  status.textContent = '';
+ });
+ $('selectedReferences').append(card);
+ status.textContent = 'Added to references (' + (selectedTracks.size + manual.length) + '/5).';
+}
+function openLikesView(playlist = null) {
+ if (likesLoading) return;
+ activePlaylist = playlist;
+ likesLoaded = false;
+ likesCursor = null;
+ $('likesBack').hidden = !playlist;
+ $('scLikesList').replaceChildren();
+ $('scLikesMore').hidden = true;
+ loadSoundCloudLikes();
+}
 async function loadSoundCloudLikes() {
  if (likesLoading || likesPicker.hidden || $('scDisconnect').disabled) return;
  const more = $('scLikesMore');
  const status = $('scLikesStatus');
  likesLoading = true;
  more.disabled = true;
+ $('likesKind').disabled = true;
+ $('likesBack').disabled = true;
  $('scDisconnect').disabled = true;
  status.textContent = 'Loading your SoundCloud likes…';
  try {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams({kind: $('likesKind').value});
+  if (activePlaylist) params.set('playlist', activePlaylist.id);
   if (likesCursor) params.set('cursor', likesCursor);
   const response = await fetch('/.netlify/functions/soundcloud-likes?' + params, { cache: 'no-store' });
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !Array.isArray(data.items)) throw Error(data.error || 'Could not load your SoundCloud likes.');
   for (const track of data.items) {
-   const row = document.createElement('div');
-   row.className = 'sc-like-row';
-   row.draggable = true;
-   const artwork = document.createElement('span');
-   artwork.className = 'sc-like-art';
-   artwork.setAttribute('aria-hidden', 'true');
-   artwork.textContent = '♫';
-   if (track.artwork) {
-    const image = document.createElement('img');
-    image.alt = '';
-    image.loading = 'lazy';
-    image.decoding = 'async';
-    image.onerror = () => image.remove();
-    image.src = track.artwork;
-    artwork.append(image);
+   if (track.kind === 'playlist') {
+    $('scLikesList').append(referenceRow(track, 'Open', () => openLikesView(track)));
+    continue;
    }
-   const label = document.createElement('span');
-   const title = document.createElement('strong');
-   title.className = 'sc-like-title';
-   title.textContent = track.title;
-   const artist = document.createElement('span');
-   artist.className = 'sc-like-artist';
-   artist.textContent = track.artist || '';
-   label.append(title, artist);
-   const add = document.createElement('button');
-   add.type = 'button';
-   add.className = 'secondary';
-   add.textContent = 'Add';
-   add.setAttribute('aria-label', 'Add ' + track.title + ' to references');
-   add.onclick = () => addLikedReference(track.url);
+   const row = referenceRow(track, 'Add', () => addLikedReference(track));
+   row.draggable = true;
    row.ondragstart = event => {
-    event.dataTransfer.setData(likesDragType, track.url);
+    event.dataTransfer.setData(likesDragType, JSON.stringify(track));
     event.dataTransfer.effectAllowed = 'copy';
    };
-   row.append(artwork, label, add);
    $('scLikesList').append(row);
   }
   likesLoaded = true;
   likesCursor = data.nextCursor || null;
   more.textContent = 'Load more';
   more.hidden = !likesCursor;
-  status.textContent = $('scLikesList').childElementCount || likesCursor ? '' : 'No linked tracks in your SoundCloud likes yet.';
+  status.textContent = $('scLikesList').childElementCount || likesCursor ? '' : 'Nothing to show in this list yet.';
  } catch (error) {
   status.textContent = error.message;
   more.textContent = 'Retry';
@@ -253,6 +297,8 @@ async function loadSoundCloudLikes() {
  } finally {
   likesLoading = false;
   more.disabled = false;
+  $('likesKind').disabled = false;
+  $('likesBack').disabled = false;
   $('scDisconnect').disabled = false;
  }
 }
@@ -260,6 +306,8 @@ likesPicker.ontoggle = () => {
  if (likesPicker.open && !likesLoaded) loadSoundCloudLikes();
 };
 $('scLikesMore').onclick = loadSoundCloudLikes;
+$('likesKind').onchange = () => openLikesView();
+$('likesBack').onclick = () => openLikesView();
 referenceInput.ondragover = event => {
  if (event.dataTransfer.types.includes(likesDragType)) {
   event.preventDefault();
@@ -270,10 +318,15 @@ referenceInput.ondragover = event => {
 referenceInput.ondragleave = () => referenceInput.classList.remove('is-drop-target');
 referenceInput.ondrop = event => {
  referenceInput.classList.remove('is-drop-target');
- const url = event.dataTransfer.getData(likesDragType);
- if (!url.startsWith('https://soundcloud.com/')) return;
+ const data = event.dataTransfer.getData(likesDragType);
+ if (!data) return;
  event.preventDefault();
- addLikedReference(url);
+ try {
+  const track = JSON.parse(data);
+  if (track.title && track.url?.startsWith('https://soundcloud.com/')) addLikedReference(track);
+ } catch {
+  $('scLikesStatus').textContent = 'Could not add that track.';
+ }
 };
 
 loadSoundCloudAccount();
@@ -653,7 +706,9 @@ function diverseTop(results,desired){
 }
 function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent=t.source||'Apple Music';flags.append(f);let a=document.createElement('a');a.textContent='Open on '+(t.source||'Apple Music');a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';let reason=document.createElement('div');reason.className='muted match-reason';reason.textContent=t._matchReason;info.append(name,artist,flags,reason,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
 $('generate').onclick=async()=>{
- const raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);
+ const selected = [...selectedTracks.values()].map(track => track.url);
+ const raw = [...new Map([...selected, ...manualReferences()].map(value => [trackKey(value), value])).values()];
+ if(raw.length>5){$('status').textContent='Use up to five references. Remove a track or a pasted line.';return;}
  if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return;}
  const btn=$('generate');btn.disabled=true;$('clear').disabled=true;
  $('referenceDetails').replaceChildren();
@@ -698,6 +753,6 @@ $('generate').onclick=async()=>{
   $('resultSection').hidden=true;$('status').className='error status';$('status').textContent=String(e.message||e);
  }finally{btn.disabled=false;$('clear').disabled=false;}
 };
-$('clear').onclick=()=>{$('referenceDetails').replaceChildren();$('refs').value='';$('texture').value='';$('status').textContent='';$('resultSection').hidden=true;playlist=[];$('discoveryAudit').textContent='';$('results').replaceChildren();$('total').textContent='';$('scMessage').hidden=true;$('scMessage').textContent='';['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true)};
+$('clear').onclick=()=>{$('referenceDetails').replaceChildren();$('refs').value='';selectedTracks.clear();$('selectedReferences').replaceChildren();$('texture').value='';$('status').textContent='';$('resultSection').hidden=true;playlist=[];$('discoveryAudit').textContent='';$('results').replaceChildren();$('total').textContent='';$('scMessage').hidden=true;$('scMessage').textContent='';['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=true)};
 function exportPlatform(platform){if(!playlist.length)return;let rows=[['Artist','Title','Album','ISRC','Source URL'],...playlist.map(t=>[t.artistName,t.trackName,t.collectionName,t.isrc||'',t.trackViewUrl||''])];saveCSV('DJ_Crate_'+platform+'_Soundiiz_Import.csv',rows)}$('soundcloud').onclick=()=>exportPlatform('SoundCloud');$('spotify').onclick=()=>exportPlatform('Spotify');$('usb').onclick=()=>{let rows=[['Position','Artist','Track','Album','Catalogue reference URL','Audio file acquired legally?','Local filename','Rekordbox checked?'],...playlist.map((t,i)=>[i+1,t.artistName,t.trackName,t.collectionName,t.trackViewUrl||'','NO','','NO'])];saveCSV('DJ_Crate_USB_Purchase_And_Rekordbox_Checklist.csv',rows)};
 </script></body></html>
