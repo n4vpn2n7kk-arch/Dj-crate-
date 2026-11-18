@@ -48,7 +48,7 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
 Or type: Artist — Track Name"></textarea><p class="muted">One input for both discovery sources. Paste up to five public SoundCloud links or artist — track names. With SoundCloud API access, DJ Crate uses the track’s uploader, genre and tags to guide discovery. For audio comparison, use your own files below.</p><div class="grid"><div><label for="genreButton">Sound / subgenre</label>
 <div class="genre-picker" id="genrePicker"><select id="style" class="genre-native" aria-label="Selected primary genre"><option value="minimal house">Minimal / rolling house</option><option value="uk garage">UK garage</option><option value="deep house">Deep house</option><option value="tech house">Tech house</option><option value="house">House</option><option value="techno">Techno</option><option value="breakbeat">Breakbeat</option><option value="drum and bass">Drum &amp; bass</option><option value="disco">Disco / funky</option><option value="hip hop">Hip-hop</option><option value="trance">Trance</option><option value="electronic">Other electronic</option></select>
 <button type="button" id="genreButton" class="genre-trigger" aria-expanded="false" aria-controls="genrePanel"><span id="selectedGenre">Minimal / rolling house</span><span class="genre-chevron">⌄</span></button>
-<div id="genrePanel" class="genre-panel" hidden><input type="search" id="genreSearch" class="genre-search" placeholder="Search any genre…" aria-label="Search music genres"/><p class="muted" style="margin:0">Quick picks</p><div id="genreQuick" class="genre-picks"></div><div id="genreFamilies" class="genre-families"></div><p class="genre-hint">Choose a subgenre in two taps, or type its name. Specific subgenres use strict matching — fewer results may be available.</p></div></div></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict genre: require evidence for the chosen style and avoid repeat artists</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted" id="scState" aria-live="polite">Checking SoundCloud discovery availability…</p><div id="referenceDetails" aria-live="polite"></div><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>metadata-based discovery candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><p class="muted" id="discoveryAudit" aria-live="polite"></p><h3 class="source-title">Music catalogue suggestions <span class="muted">· metadata-based</span></h3><div id="results"></div><div class="source-section"><h3 class="source-title">SoundCloud discoveries <span class="muted">· public uploads</span></h3><p id="scMessage" class="muted" role="status"></p><div id="scResults"></div></div></section><section class="panel" id="audioPanel"><h2>Listen &amp; compare audio <span class="version">BETA</span></h2>
+<div id="genrePanel" class="genre-panel" hidden><input type="search" id="genreSearch" class="genre-search" placeholder="Search any genre…" aria-label="Search music genres"/><p class="muted" style="margin:0">Quick picks</p><div id="genreQuick" class="genre-picks"></div><div id="genreFamilies" class="genre-families"></div><p class="genre-hint">Choose a subgenre in two taps, or type its name. Specific subgenres use strict matching — fewer results may be available.</p></div></div></div><div><label for="count">Maximum tracks</label><select id="count"><option>10</option><option selected="">20</option><option>30</option><option>40</option></select></div></div><label for="texture">Describe the vibe (optional, comma-separated)</label><input id="texture" placeholder="e.g. rolling bass, late-night, bouncy, hypnotic"/><div class="grid"><div><label>Reference vibe priority: <b>90%</b></label><div class="muted">Fixed default — strict match</div></div><div><label>Avoid overplayed tracks: <b>75%</b></label><div class="muted">Popular tracks allowed when they fit</div></div></div><label class="checkbox"><input checked="" id="strict" type="checkbox"/>Strict genre: require evidence for the chosen style and avoid repeat artists</label><div class="actions"><button id="generate">Find my tracks  ↗</button><button class="secondary" id="clear">Reset</button></div><p class="muted" id="scState" aria-live="polite">Search includes public SoundCloud uploads.</p><div id="referenceDetails" aria-live="polite"></div><p class="muted status" id="status" role="status"></p></section><section class="panel" hidden="" id="resultSection"><h2>Your discoveries <span class="muted" id="total"></span></h2><div class="notice">These are <b>metadata-based discovery candidates, not verified sonic matches</b>. The public catalogue does not supply the audio features needed to prove a 90% sound match, obscurity score, BPM or key. Listen before exporting; strict mode may return fewer tracks.</div><p class="muted" id="discoveryAudit" aria-live="polite"></p><h3 class="source-title">Music catalogue suggestions <span class="muted">· metadata-based</span></h3><div id="results"></div><div class="source-section"><h3 class="source-title">SoundCloud discoveries <span class="muted">· public uploads</span></h3><p id="scMessage" class="muted" role="status"></p><div id="scResults"></div></div></section><section class="panel" id="audioPanel"><h2>Listen &amp; compare audio <span class="version">BETA</span></h2>
 <p class="muted">Compare real audio you are allowed to analyse. Upload one reference and several candidate files. DJ Crate analyses audio locally on your phone, then ranks candidates by their musical characteristics. <b>This is audio signal analysis, not a trained AI recognition model</b>; it is separate from the streaming catalogue.</p>
 <div class="audio-grid"><div class="audio-drop"><label for="audioReference">Reference audio</label><input type="file" id="audioReference" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">One file you have permission to analyse.</p></div>
 <div class="audio-drop"><label for="audioCandidates">Candidate audio files</label><input type="file" id="audioCandidates" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">Select up to 12 tracks to compare.</p></div></div>
@@ -123,29 +123,10 @@ $('scDisconnect').onclick = async () => {
 };
 loadSoundCloudAccount();
 
-let soundCloudDiscoveryConfigured=false;
-async function updateSoundCloudStatus(){
- try{
-  const response=await fetch('/api/soundcloud/status',{cache:'no-store'});
-  if(!response.ok)throw Error('Status unavailable');
-  const data=await response.json();
-  soundCloudDiscoveryConfigured=!!data.configured;
-  $('scState').textContent=soundCloudDiscoveryConfigured?
-   'One search now checks the music catalogue and public SoundCloud uploads using your selected genre. SoundCloud uploader tags are not audio-verified.':
-   'Music catalogue search is ready. SoundCloud public-upload discovery will join the same results once replacement API credentials are configured.';
- }catch{
-  soundCloudDiscoveryConfigured=false;
-  $('scState').textContent='Music catalogue search is ready. SoundCloud discovery is not available yet.';
- }
-}
 // The SoundCloud API search is deliberately separate from the Apple metadata search.
 // The same references, genre and vibe are shared, but sources are never mislabeled.
 async function searchSoundCloudFromReferences(refs,style,desired,keywords){
  const out=$('scResults');out.replaceChildren();
- if(!soundCloudDiscoveryConfigured){
-  $('scMessage').textContent='SoundCloud API access is pending. Music catalogue results above are still available.';
-  return;
- }
  $('scMessage').textContent='Searching SoundCloud public uploads…';
  const genre=genreSubfocus||style;
  const artist=String(refs[0]?.artist||'').trim();
@@ -153,10 +134,11 @@ async function searchSoundCloudFromReferences(refs,style,desired,keywords){
  const queries=[...new Set([artist?`${artist} ${genre}`:'',
    `${genre} ${keywords.slice(0,2).join(' ')}`.trim(),referenceGenre,genre].filter(q=>q&&q.length>=2&&q.length<=100))].slice(0,4);
  const responses=await Promise.allSettled(queries.map(async q=>{
-  const response=await fetch('/api/soundcloud/search?'+new URLSearchParams({q,genre}));
+  const response=await fetch('/.netlify/functions/soundcloud-search?'+new URLSearchParams({q,genre}));
   const data=await response.json().catch(()=>({}));
-  if(!response.ok)throw Error(data.error||'SoundCloud search failed');
-  return data.items||[];
+  if(!response.ok)throw Error(data.error||`SoundCloud search failed (HTTP ${response.status})`);
+  if(!Array.isArray(data.items))throw Error('Unexpected SoundCloud search response');
+  return data.items;
  }));
  const tracks=responses.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
  const seenTracks=new Set(),seenArtists=new Set(),unique=[];
@@ -193,7 +175,6 @@ async function searchSoundCloudFromReferences(refs,style,desired,keywords){
   info.append(name,artistNode,link);row.append(art,info);out.append(row);
  }
 }
-updateSoundCloudStatus();
 let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
 
 const GENRE_GROUPS=[
