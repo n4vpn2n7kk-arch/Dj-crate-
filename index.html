@@ -34,6 +34,35 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
  .track{flex-wrap:wrap}
 }
 .source-title{font-size:17px;letter-spacing:-.02em;margin:18px 0 8px}.source-title .muted{font-weight:400;font-size:12px}.source-section{border-top:1px solid #3b3449;margin-top:24px;padding-top:15px}.source-section .track:last-child{border-bottom:0}
+/* Section accents and the SoundCloud likes picker */
+.panel-main { background: linear-gradient(145deg,#241b39,#151522 64%); border-color:#66518b; }
+.sc-account-bar { background: linear-gradient(120deg,#35221e,#1d1926 75%); border-color:#704b39; }
+#resultSection { background: linear-gradient(145deg,#152b32,#151722 62%); border-color:#385d66; }
+#audioPanel { background: linear-gradient(145deg,#172a25,#151722 64%); border-color:#3b6254; }
+.export-panel { background: linear-gradient(145deg,#30241a,#171721 65%); border-color:#66513b; }
+#scLikes { margin:14px 0 16px; border:1px solid #79513d; border-radius:16px; background:#241b23; overflow:hidden; }
+#scLikes summary { min-height:48px; padding:13px 15px; color:#ffc097; cursor:pointer; }
+#scLikes[open] summary { border-bottom:1px solid #5d4136; background:#312127; }
+.sc-likes-body { padding:12px; }
+.sc-likes-body > p { margin:0 0 10px; }
+#scLikesStatus:empty { margin:0; }
+#scLikesList { display:grid; gap:8px; max-height:min(52vh,460px); overflow:auto; }
+.sc-like-row { display:grid; grid-template-columns:44px minmax(0,1fr) auto; gap:10px; align-items:center; padding:8px; border-radius:12px; background:#331f28; }
+.sc-like-art { position:relative; display:grid; place-items:center; width:44px; height:44px; border-radius:9px; overflow:hidden; background:#573349; color:#ffd0b3; }
+.sc-like-art img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.sc-like-title,.sc-like-artist { display:block; overflow-wrap:anywhere; }
+.sc-like-title { color:#fff2eb; }
+.sc-like-artist { color:#d5b7c5; font-size:.82rem; }
+.sc-like-row .secondary,#scLikesMore { min-height:44px; padding:8px 12px; border-color:#94654c; color:#ffd4ba; }
+#scLikesMore { margin-top:10px; }
+#refs:focus-visible,#scLikes summary:focus-visible,#scLikes button:focus-visible { outline:2px solid #ffc097; outline-offset:2px; }
+#refs.is-drop-target { border-color:#ffab80; box-shadow:0 0 0 3px #ffab8040; }
+@media (prefers-reduced-motion:no-preference) {
+ .sc-like-row, #scLikes summary { transition:background-color 160ms ease; }
+ #refs { transition:border-color 160ms ease,box-shadow 160ms ease; }
+}
+@media (hover:hover) { .sc-like-row:hover { background:#422735; } }
+
 </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.8</span></div></header><section class="sc-account-bar" aria-label="SoundCloud account">
   <div class="sc-profile">
     <div class="sc-avatar" aria-hidden="true">
@@ -47,10 +76,12 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
   </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.8</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><textarea id="refs" placeholder="Paste a SoundCloud track URL…
 Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
  <summary>My SoundCloud Likes</summary>
+ <div class="sc-likes-body">
  <p class="muted">Tap Add to references or drag a track into the reference box.</p>
  <p id="scLikesStatus" class="muted" role="status"></p>
  <div id="scLikesList"></div>
  <button type="button" id="scLikesMore" class="secondary" hidden>Load more</button>
+ </div>
 </details><p class="muted">One input for both discovery sources. Paste up to five public SoundCloud links or artist — track names. With SoundCloud API access, DJ Crate uses the track’s uploader, genre and tags to guide discovery. For audio comparison, use your own files below.</p><div class="grid"><div><label for="genreButton">Sound / subgenre</label>
 <div class="genre-picker" id="genrePicker"><select id="style" class="genre-native" aria-label="Selected primary genre"><option value="minimal house">Minimal / rolling house</option><option value="uk garage">UK garage</option><option value="deep house">Deep house</option><option value="tech house">Tech house</option><option value="house">House</option><option value="techno">Techno</option><option value="breakbeat">Breakbeat</option><option value="drum and bass">Drum &amp; bass</option><option value="disco">Disco / funky</option><option value="hip hop">Hip-hop</option><option value="trance">Trance</option><option value="electronic">Other electronic</option></select>
 <button type="button" id="genreButton" class="genre-trigger" aria-expanded="false" aria-controls="genrePanel"><span id="selectedGenre">Minimal / rolling house</span><span class="genre-chevron">⌄</span></button>
@@ -60,7 +91,7 @@ Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
 <div class="audio-drop"><label for="audioCandidates">Candidate audio files</label><input type="file" id="audioCandidates" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac"/><p class="muted">Select up to 12 tracks to compare.</p></div></div>
 <div class="actions"><button id="analyzeAudio" class="secondary">Analyse and compare audio</button><button id="audioCSV" disabled class="secondary">Download comparison CSV</button></div>
 <p id="audioStatus" class="muted status" role="status"></p><div id="audioResults"></div>
-<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or actual 90% sound similarity.</p></section><section class="panel"><h2>Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, searches Apple's public music catalogue, and — when approved API credentials are configured — separately searches SoundCloud public uploads using the same reference and genre fields. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.8 / BETA</span></footer></main><script>
+<p class="muted">Files are processed inside your browser, not uploaded to our server. Some file formats or very large files may not work on an iPhone. These comparisons do not establish genre, copyright permission, or actual 90% sound similarity.</p></section><section class="panel export-panel"><h2>Take your crate further</h2><p class="muted">Exports use real artist/title metadata so a playlist transfer service can attempt matching. Platform imports may require you to review matches manually.</p><div class="actions"><button class="secondary" disabled="" id="soundcloud">SoundCloud CSV</button><button class="secondary" disabled="" id="spotify">Spotify CSV</button><button class="secondary" disabled="" id="usb">USB crate manifest</button></div><div class="actions"><a class="button secondary" href="https://soundiiz.com/" rel="noopener" target="_blank">Open Soundiiz</a><a class="button secondary" href="https://www.tunemymusic.com/" rel="noopener" target="_blank">Open TuneMyMusic</a></div><p class="muted"><b>SoundCloud / Spotify:</b> Import the CSV through a compatible playlist-transfer service, then select your destination. Availability and matches vary. <b>USB / Rekordbox:</b> The USB export is a track checklist, not audio. Buy or download files from authorised sellers/artists, import those files into Rekordbox, then export to USB. Streaming previews cannot be copied to USB.</p></section><section class="panel"><details><summary>How DJ Crate currently finds tracks — and what it can't do yet</summary><p class="muted">The server identifies public SoundCloud references when accessible, searches Apple's public music catalogue, and — when approved API credentials are configured — separately searches SoundCloud public uploads using the same reference and genre fields. It deduplicates results, excludes exact references, scores available metadata, and can enforce a minimum relevance threshold. It does <b>not</b> have cross-platform full-catalogue search, track-level popularity data, licensed audio embeddings, verified BPM/key, or direct playlist creation in SoundCloud/Spotify. The 90%/75% settings express product priorities, not measured model accuracy. True strict sound matching requires licensed audio features or a permissioned catalogue.</p></details></section><footer class="footer"><span class="brand">◉ DJ CRATE</span><span>BUILT FOR THE LOVE OF THE DIG.</span><span>V8.8 / BETA</span></footer></main><script>
 const $=id=>document.getElementById(id);
 const scAvatar = $('scAvatar');
 scAvatar.addEventListener('error', () => { scAvatar.hidden = true; });
@@ -173,21 +204,40 @@ async function loadSoundCloudLikes() {
   if (!response.ok || !Array.isArray(data.items)) throw Error(data.error || 'Could not load your SoundCloud likes.');
   for (const track of data.items) {
    const row = document.createElement('div');
-   row.className = 'actions';
+   row.className = 'sc-like-row';
    row.draggable = true;
+   const artwork = document.createElement('span');
+   artwork.className = 'sc-like-art';
+   artwork.setAttribute('aria-hidden', 'true');
+   artwork.textContent = '♫';
+   if (track.artwork) {
+    const image = document.createElement('img');
+    image.alt = '';
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.onerror = () => image.remove();
+    image.src = track.artwork;
+    artwork.append(image);
+   }
    const label = document.createElement('span');
-   label.textContent = track.artist ? track.artist + ' — ' + track.title : track.title;
+   const title = document.createElement('strong');
+   title.className = 'sc-like-title';
+   title.textContent = track.title;
+   const artist = document.createElement('span');
+   artist.className = 'sc-like-artist';
+   artist.textContent = track.artist || '';
+   label.append(title, artist);
    const add = document.createElement('button');
    add.type = 'button';
    add.className = 'secondary';
-   add.textContent = 'Add to references';
-   add.setAttribute('aria-label', 'Add ' + label.textContent + ' to references');
+   add.textContent = 'Add';
+   add.setAttribute('aria-label', 'Add ' + track.title + ' to references');
    add.onclick = () => addLikedReference(track.url);
    row.ondragstart = event => {
     event.dataTransfer.setData(likesDragType, track.url);
     event.dataTransfer.effectAllowed = 'copy';
    };
-   row.append(label, add);
+   row.append(artwork, label, add);
    $('scLikesList').append(row);
   }
   likesLoaded = true;
@@ -213,9 +263,12 @@ referenceInput.ondragover = event => {
  if (event.dataTransfer.types.includes(likesDragType)) {
   event.preventDefault();
   event.dataTransfer.dropEffect = 'copy';
+  referenceInput.classList.add('is-drop-target');
  }
 };
+referenceInput.ondragleave = () => referenceInput.classList.remove('is-drop-target');
 referenceInput.ondrop = event => {
+ referenceInput.classList.remove('is-drop-target');
  const url = event.dataTransfer.getData(likesDragType);
  if (!url.startsWith('https://soundcloud.com/')) return;
  event.preventDefault();
