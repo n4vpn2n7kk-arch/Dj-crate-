@@ -394,7 +394,7 @@ async function searchSoundCloudFromReferences(refs,style,keywords){
  return unique.map(t=>({
   source:'SoundCloud', trackName:t.title, artistName:t.artist,
   primaryGenreName:t.genre, artworkUrl100:t.artwork, trackViewUrl:t.url,
-  collectionName:'', tags:t.tags, playbackCount:t.playback_count
+  collectionName:'', tags:t.tags, playbackCount:t.playback_count, trackTimeMillis:t.duration
  }));
 }
 let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
@@ -669,6 +669,14 @@ function sharedGenreTerms(refs,style){
  }
  return [...counts].sort((a,b)=>b[1]-a[1]).map(([term])=>term);
 }
+function isMixOrSet(track){
+ const title=norm(track.trackName);
+ const tags=metadataTags(track.tags).map(norm);
+ const duration=Number(track.trackTimeMillis);
+ if(Number.isFinite(duration)&&duration>=25*60*1000)return true;
+ const setPattern=/\b(?:dj (?:set|mix)|guest mix|radio (?:show|mix)|megamix|mix compilation|continuous mix|full (?:mix|set)|live set|curated\d* sessions?|(?:house|garage|techno|trance|breakbeat|disco|dnb|drum and bass) (?:mix|sessions?|set)(?=\s+(?:\d|vol\b|episode\b)|$)|(?:sessions?|podcast|episode|mix series) \d+)\b/;
+ return setPattern.test(title)||tags.some(tag=>/^(?:dj set|dj mix|radio show|continuous mix|mix compilation|podcast|live set)$/.test(tag));
+}
 function rank(t,refs,style,keywords,strict,preferences){
  const artist=norm(t.artistName),track=norm(t.trackName);
  const tags=[t.primaryGenreName,...metadataTags(t.tags)].filter(Boolean);
@@ -686,7 +694,7 @@ function rank(t,refs,style,keywords,strict,preferences){
   return refName&&(refName===artist+' '+track||
    (refName===track&&(!r.artist||norm(r.artist)===artist)));
  });
- if(reference||meta.contradictory||!level||(strict&&level<3)||
+ if(reference||isMixOrSet(t)||meta.contradictory||!level||(strict&&level<3)||
     obviousFiller.test(t.collectionName||'')||obviousFiller.test(t.trackName)||genericTrack.test(t.trackName.trim()))return null;
 
  const refMatches=refs.filter(r=>[r.genre,...metadataTags(r.tags)].some(term=>
