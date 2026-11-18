@@ -1,7 +1,18 @@
 import {configured,sessionFromRequest,json,cookie,names,seal,clearCookie} from './soundcloud-auth-utils.mjs';
 export default async request=>{
  if(request.method!=='GET')return json({error:'GET required'},405);
- if(!configured())return json({configured:false,connected:false,message:'Awaiting rotated SoundCloud credentials'});
+ if (!configured()) {
+  return json({
+    configured: false,
+    connected: false,
+    checks: {
+      clientIdPresent: Boolean(process.env.SOUNDCLOUD_CLIENT_ID),
+      clientSecretPresent: Boolean(process.env.SOUNDCLOUD_CLIENT_SECRET),
+      sessionSecretLongEnough:
+        (process.env.DJCRATE_SESSION_SECRET?.length ?? 0) >= 32,
+    },
+  });
+}
  try{const result=await sessionFromRequest(request);
   if(!result)return json({configured:true,connected:false});
   const s=result.session;
