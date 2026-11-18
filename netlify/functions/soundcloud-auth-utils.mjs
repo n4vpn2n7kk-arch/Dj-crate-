@@ -37,8 +37,21 @@ export async function exchange(params){
  if(!res.ok)throw new Error(`SoundCloud token exchange failed (${res.status})`);
  const data=await res.json();if(!data.access_token||!data.refresh_token)throw new Error('Token data incomplete');return data;
 }
-export function sessionData(token,user){return {access:token.access_token,refresh:token.refresh_token,expiresAt:now()+Math.max(60,Number(token.expires_in||3600))*1000,username:user?.username||'',userId:user?.id||null,exp:now()+7*86400000}}
-export async function profile(token){const res=await fetch('https://api.soundcloud.com/me',{headers:{'Authorization':'OAuth '+token,'Accept':'application/json'},signal:AbortSignal.timeout(10000)});if(!res.ok)throw Error('SoundCloud profile unavailable');const data=await res.json();return {id:data.id,username:data.username||'SoundCloud user'};}
+export function sessionData(token,user){return {access:token.access_token,refresh:token.refresh_token,expiresAt:now()+Math.max(60,Number(token.expires_in||3600))*1000,username:user?.username||'',avatarUrl:user?.avatarUrl??null,userId:user?.id||null,exp:now()+7*86400000}}
+export async function profile(token){const res=await fetch('https://api.soundcloud.com/me',{headers:{'Authorization':'OAuth '+token,'Accept':'application/json'},signal:AbortSignal.timeout(10000)});if(!res.ok)throw Error('SoundCloud profile unavailable');const data=await res.json();return {id:data.id,username:data.username||'SoundCloud user',avatarUrl:soundCloudAvatar(data.avatar_url)};}
+function soundCloudAvatar(value) {
+ if (typeof value !== 'string' || value.length > 512) return null;
+ try {
+  const url = new URL(value);
+  if (url.protocol === 'https:' && !url.username && !url.password &&
+      (url.hostname === 'sndcdn.com' || url.hostname.endsWith('.sndcdn.com'))) {
+   return url.href;
+  }
+ } catch {
+  return null;
+ }
+ return null;
+}
 export async function sessionFromRequest(request){
  const existing=authCookie(request);if(!existing)return null;
  if(existing.expiresAt > now()+90000)return {session:existing,changed:false};
