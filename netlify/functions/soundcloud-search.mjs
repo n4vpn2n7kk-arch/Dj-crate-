@@ -18,38 +18,45 @@ export default async request=>{
     url.searchParams.set('limit','50');
     url.searchParams.set('access','playable');
     url.searchParams.set('linked_partitioning','true');
-    const res=await fetch(url,{signal:stop(),headers:{'Authorization':'OAuth '+access,'Accept':'application/json'}});
-    if(!res.ok)throw Error('SoundCloud API HTTP '+res.status);
-    const data=await res.json();
-    const songs=Array.isArray(data.collection)?data.collection:Array.isArray(data)?data:[];
-    const items=songs.filter(t=>t&&(t.urn||t.id)&&t.title&&t.permalink_url).map(t=>({
-      id:t.urn||t.id,title:t.title,artist:t.user?.username||t.metadata_artist||'Unknown',
-      artistId:t.user?.urn||t.user?.id||null,genre:t.genre||'',url:t.permalink_url,
-      artwork:t.artwork_url||t.user?.avatar_url||'',playback_count:t.playback_count??null,
-      access:t.access||''
-    }));
-    const terms=genre.toLowerCase().trim();
-    // SoundCloud uploader genre tags are inconsistent: a genre filter is advisory only.
-    const genreAliases={
-      'deep house':['deep house','soulful house'],
-      'minimal house':['minimal house','microhouse','rominimal'],
-      'uk garage':['uk garage','ukg','speed garage','2 step'],
-      'tech house':['tech house'],
-      'house':['house'],
-      'techno':['techno','hardgroove'],
-      'breakbeat':['breakbeat','breaks','broken beat'],
-      'drum and bass':['drum and bass','dnb','jungle'],
-      'disco':['disco','nu disco'],
-      'hip hop':['hip hop','boom bap','rap'],
-      'trance':['trance'],
-      'electronic':['electronic','electronica']
-    };
-    const aliases=genreAliases[terms]||[terms];
-    const filtered=terms?items.filter(t=>aliases.some(alias=>t.genre.toLowerCase().includes(alias))):items;
-    const counts=new Map(),diverse=[];
-    for(const t of filtered){const a=String(t.artistId||t.artist).toLowerCase();if((counts.get(a)||0)>=1)continue;counts.set(a,(counts.get(a)||0)+1);diverse.push(t);if(diverse.length===30)break}
-    return json({provider:'SoundCloud',items:diverse,unfilteredCount:items.length,genreFilterApplied:!!terms,strictGenreTags:true,
-      note:'Strict uploader genre-tag candidates only. Genre tags may be unreliable; no audio has been analysed.'});
+    url.searchParams.set('duration[to]','1199999');
+    const pages=reqUrl.searchParams.get('pages')==='2'?2:1;
+    const headers={'Authorization':'OAuth '+access,'Accept':'application/json'};
+    const signal=stop();
+    const items=new Map();
+    let partial=false;
+    for(let page=0;page<pages;page++){
+      try{
+        const res=await fetch(url,{signal,headers,redirect:'error'});
+        if(!res.ok)throw Error('SoundCloud API HTTP '+res.status);
+        const data=await res.json();
+        const songs=Array.isArray(data)?data:data.collection;
+        if(!Array.isArray(songs))throw Error('Unexpected SoundCloud search response');
+        for(const t of songs){
+          if(!t||!(t.urn||t.id)||!t.title||!t.permalink_url?.startsWith('https://soundcloud.com/'))continue;
+          const id=t.urn||t.id;
+          if(items.has(id)||Number(t.duration)>=1200000)continue;
+          const tags=Array.isArray(t.tags)?t.tags:typeof t.tag_list==='string'
+            ? (t.tag_list.match(/"[^"]+"|\S+/g)||[]).map(tag=>tag.replace(/^"|"$/g,''))
+            : [];
+          items.set(id,{
+            id,title:t.title,artist:t.metadata_artist||t.user?.username||'Unknown',
+            artistId:t.user?.urn||t.user?.id||null,genre:t.genre||'',url:t.permalink_url,
+            artwork:t.artwork_url||t.user?.avatar_url||'',playback_count:t.playback_count??null,
+            access:t.access||'',duration:t.duration??null,tags
+          });
+        }
+        if(!data.next_href||page+1>=pages)break;
+        const next=new URL(data.next_href,url);
+        if(next.origin!==url.origin||next.pathname!==url.pathname||next.href===url.href)break;
+        next.searchParams.set('duration[to]','1199999');
+        url.search=next.search;
+      }catch(error){
+        if(page===0)throw error;
+        partial=true;
+        break;
+      }
+    }
+    return json({provider:'SoundCloud',items:[...items.values()],partial});
   }catch(e){
     return json({error:String(e.message||'SoundCloud unavailable').slice(0,160)},502);
   }
