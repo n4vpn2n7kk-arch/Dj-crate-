@@ -1,5 +1,17 @@
 import { configured, sessionFromRequest, json, cookie, names, seal } from './soundcloud-auth-utils.mjs';
 
+function soundCloudImage(value) {
+ if (typeof value !== 'string') return null;
+ try {
+  const url = new URL(value);
+  return url.protocol === 'https:' && /^(?:[^.]+\.)*sndcdn\.com$/i.test(url.hostname)
+   ? url.href
+   : null;
+ } catch {
+  return null;
+ }
+}
+
 export default async function soundcloudLikes(request) {
  const privateHeaders = { vary: 'Cookie' };
  if (request.method !== 'GET') return json({ error: 'GET required' }, 405, privateHeaders);
@@ -40,7 +52,8 @@ export default async function soundcloudLikes(request) {
    const track = entry.track ?? entry;
    const url = track.permalink_url;
    if (typeof url !== 'string' || !url.startsWith('https://soundcloud.com/') || !track.title) return [];
-   return [{ title: track.title, artist: track.user?.username || '', url }];
+   const artwork = soundCloudImage(track.artwork_url) || soundCloudImage(track.user?.avatar_url);
+   return [{ title: track.title, artist: track.user?.username || '', url, artwork }];
   });
   const nextCursor = data.next_href
    ? new URL(data.next_href, endpoint).searchParams.get('cursor')
