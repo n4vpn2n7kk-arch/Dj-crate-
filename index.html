@@ -403,7 +403,7 @@ $('generate').onclick=async()=>{
     ...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),...styleMap[style],
     ...refs.map(r=>r.name),style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,12);
    $('status').textContent='Searching music catalogue…';
-   const tasks=[];for(const term of terms.slice(0,7))for(const country of ['gb','us'])tasks.push({term,country});
+   const tasks=[];for(const term of terms.slice(0,6))for(const country of ['gb','us'])tasks.push({term,country});
    const {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent=`Searching catalogue… ${n}/${total} searches completed`;});
    if(!found.length)throw Error('Music catalogue could not retrieve results. '+(errors[0]||'Please check the backend deployment.'));
    const all=dedup(found.flatMap(r=>r.results||[]));
