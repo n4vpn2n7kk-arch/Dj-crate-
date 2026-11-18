@@ -63,6 +63,7 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
 }
 @media (hover:hover) { .sc-like-row:hover { background:#422735; } }
 
+.match-reason { margin:5px 0; line-height:1.4; }
 </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.8</span></div></header><section class="sc-account-bar" aria-label="SoundCloud account">
   <div class="sc-profile">
     <div class="sc-avatar" aria-hidden="true">
@@ -279,12 +280,12 @@ loadSoundCloudAccount();
 
 // The SoundCloud API search is deliberately separate from the Apple metadata search.
 // The same references, genre and vibe are shared, but sources are never mislabeled.
-async function searchSoundCloudFromReferences(refs,style,desired,keywords){
+async function searchSoundCloudFromReferences(refs,style,keywords){
  const genre=genreSubfocus||style;
  const artist=String(refs[0]?.artist||'').trim();
- const referenceGenre=refs.find(r=>r.genre)?.genre;
- const queries=[...new Set([artist?`${artist} ${genre}`:'',
-   `${genre} ${keywords.slice(0,2).join(' ')}`.trim(),referenceGenre,genre].filter(q=>q&&q.length>=2&&q.length<=100))].slice(0,4);
+ const referenceGenre=sharedGenreTerms(refs,style)[0];
+ const queries=[...new Set([genre,artist?`${artist} ${genre}`:'',
+   `${genre} ${keywords.slice(0,2).join(' ')}`.trim(),referenceGenre].filter(q=>q&&q.length>=2&&q.length<=100))].slice(0,4);
  const responses=await Promise.allSettled(queries.map(async q=>{
   const response=await fetch('/.netlify/functions/soundcloud-search?'+new URLSearchParams({q,genre}));
   const data=await response.json().catch(()=>({}));
@@ -293,19 +294,17 @@ async function searchSoundCloudFromReferences(refs,style,desired,keywords){
   return data.items;
  }));
  const tracks=responses.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
- const seenTracks=new Set(),seenArtists=new Set(),unique=[];
+ const seenTracks=new Set(),unique=[];
  for(const t of tracks){
   const key=String(t.id||t.url||'');
-  const artistKey=String(t.artistId||t.artist||'').toLowerCase().trim();
-  if(!key||seenTracks.has(key)||seenArtists.has(artistKey))continue;
+  if(!key||seenTracks.has(key)||!t.title||!t.artist||!t.url)continue;
   const isRef=refs.some(r=>{
    const title=norm(r.name||'');
    return (r.id && String(r.id)===key)||r.url===t.url||
     (title&&(title===norm(t.title)||title===norm(`${t.artist} ${t.title}`)));
   });
   if(isRef)continue;
-  seenTracks.add(key);seenArtists.add(artistKey);unique.push(t);
-  if(unique.length>=desired)break;
+  seenTracks.add(key);unique.push(t);
  }
  if(!unique.length){
   const firstError=responses.find(r=>r.status==='rejected');
@@ -314,21 +313,8 @@ async function searchSoundCloudFromReferences(refs,style,desired,keywords){
  return unique.map(t=>({
   source:'SoundCloud', trackName:t.title, artistName:t.artist,
   primaryGenreName:t.genre, artworkUrl100:t.artwork, trackViewUrl:t.url,
-  collectionName:''
+  collectionName:'', tags:t.tags, playbackCount:t.playback_count
  }));
-}
-function mergeRecommendations(soundCloud, appleMusic, limit){
- const merged=[], seenTracks=new Set();
- for(let i=0;i<Math.max(soundCloud.length,appleMusic.length)&&merged.length<limit;i++){
-  for(const track of [soundCloud[i],appleMusic[i]]){
-   if(!track||merged.length>=limit)continue;
-   const key=norm(track.artistName)+'|'+norm(track.trackName);
-   if(seenTracks.has(key))continue;
-   seenTracks.add(key);
-   merged.push(track);
-  }
- }
- return merged;
 }
 let playlist=[];const norm=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();const tokens=s=>norm(s).split(' ').filter(t=>t.length>2&&!['the','and','feat','with','mix','edit','original','remix','extended','radio','version','track'].includes(t));
 
@@ -526,11 +512,6 @@ const styleMap={
 'hip hop':['hip hop','underground hip hop','boom bap'],
 'trance':['trance','progressive trance'],
 'electronic':['electronic','electronica','leftfield electronic']};
-function dedup(items){const seen=new Set();return items.filter(t=>{
- if(t.kind!=='song'||!t.trackName||!t.artistName)return false;
- const k=norm(t.artistName)+'|'+norm(t.trackName);
- if(seen.has(k))return false;seen.add(k);return true;
-});}
 // Strict tag vocabulary: broad "Electronic" or "Dance" is NOT evidence of deep house.
 const genreEvidence={
 'minimal house':[/\bminimal[\s-]?house\b/i,/\bmicrohouse\b/i,/\brominimal\b/i,/\bminimal[\s-]?deep[\s-]?house\b/i],
@@ -581,25 +562,83 @@ function genreMatchInfo(t,style){
  if(style==='electronic' && /\belectronic|electronica\b/i.test(genre))tier=3;
  return {match:tier>0,level:tier,contradictory:contradict,broad,titleOnly};
 }
-function rank(t,refs,style,keywords){
- const artist=norm(t.artistName),track=norm(t.trackName),album=norm(t.collectionName);
+const subgenreAliases={
+ '2 step':['2step','two step'],
+ 'speed garage':['speedgarage'],
+ 'liquid drum and bass':['liquid dnb','liquid funk'],
+ 'uk funky':['ukfunky']
+};
+function metadataTags(tags){
+ return Array.isArray(tags) ? tags.filter(tag=>typeof tag==='string') : [];
+}
+function hasPhrase(text,phrase){
+ const term=norm(phrase);
+ return Boolean(term)&&(' '+norm(text)+' ').includes(' '+term+' ');
+}
+function sharedGenreTerms(refs,style){
+ const counts=new Map();
+ for(const ref of refs){
+  const terms=new Set([ref.genre,...metadataTags(ref.tags)].map(norm).filter(Boolean));
+  for(const term of terms){
+   if(!broadOnly.test(term)&&!genreGenericWords.test(term)&&
+      (genreEvidence[style]||[]).some(pattern=>pattern.test(term))){
+    counts.set(term,(counts.get(term)||0)+1);
+   }
+  }
+ }
+ return [...counts].sort((a,b)=>b[1]-a[1]).map(([term])=>term);
+}
+function rank(t,refs,style,keywords,strict){
+ const artist=norm(t.artistName),track=norm(t.trackName);
+ const tags=[t.primaryGenreName,...metadataTags(t.tags)].filter(Boolean);
+ const tagText=tags.join(' ');
  const meta=genreMatchInfo(t,style);
- const refArtists=refs.map(r=>norm(r.artist||r.name.split(/\s[-–—]\s/)[0])).filter(a=>a.length>3);
- const artistMatch=refArtists.some(a=>artist===a||artist.includes(a));
- const refText=refs.map(r=>norm(r.name)).join(' ');
- const refTerms=[...new Set(tokens(refText))].filter(w=>!['house','deep','tech','minimal','garage','electronic','music','original','version'].includes(w));
- const refOverlap=refTerms.filter(w=>(artist+' '+track+' '+album).split(' ').includes(w)).length;
- const vibeHits=keywords.filter(w=>(track+' '+album).includes(w)).length;
- const reference=refs.some(r=>{const rn=norm(r.name);return rn===track||rn===artist+' '+track||rn.includes(artist+' '+track)});
- const compilation=obviousFiller.test(t.collectionName||'')||obviousFiller.test(t.trackName||'');
- const isGeneric=genericTrack.test(String(t.trackName||'').trim());
- const subgenreAllowed=!genreSubfocus || norm([t.primaryGenreName,t.collectionName].join(' ')).includes(norm(genreSubfocus));
- const eligible=meta.match&&!meta.contradictory&&!reference&&!compilation&&!isGeneric&&subgenreAllowed;
- const score=meta.level*4+(artistMatch?2:0)+Math.min(refOverlap,2)*1.1+Math.min(vibeHits,2)*1.2;
- return {...t,_eligible:eligible,_score:score,_metadataGenreLevel:meta.level,_artistMatch:artistMatch,
- _rejectReason:reference?'Reference track':compilation?'Compilation filler':isGeneric?'Generic track title':
- !subgenreAllowed?'No specific subgenre evidence':meta.contradictory?'Conflicting genre':
- !meta.match?'No convincing genre metadata':''};
+ const familyTag=tags.find(tag=>(genreEvidence[style]||[]).some(pattern=>pattern.test(tag)));
+ const specific=genreSubfocus?[genreSubfocus,...(subgenreAliases[genreSubfocus]||[])]:[];
+ const exactLabel=tags.find(tag=>specific.some(term=>hasPhrase(tag,term)));
+ const exactRelease=specific.some(term=>hasPhrase(t.collectionName,term));
+ const level=specific.length
+  ? exactLabel?4:exactRelease?3:familyTag?2:meta.level===2?1:0
+  : familyTag||meta.level===3?4:meta.level===2?3:0;
+ const reference=refs.some(r=>{
+  const refName=norm(r.name);
+  return refName&&(refName===artist+' '+track||
+   (refName===track&&(!r.artist||norm(r.artist)===artist)));
+ });
+ if(reference||meta.contradictory||!level||(strict&&level<3)||
+    obviousFiller.test(t.collectionName||'')||obviousFiller.test(t.trackName)||genericTrack.test(t.trackName.trim()))return null;
+
+ const refMatches=refs.filter(r=>[r.genre,...metadataTags(r.tags)].some(term=>
+  term&&!genreGenericWords.test(term)&&!broadOnly.test(term)&&
+  (genreEvidence[style]||[]).some(pattern=>pattern.test(term))&&hasPhrase(tagText,term))).length;
+ const vibeHits=keywords.filter(word=>hasPhrase([tagText,t.collectionName,t.trackName].join(' '),word));
+ const genreLabel=exactLabel||familyTag||t.primaryGenreName;
+ const reason=exactRelease&&!exactLabel||!genreLabel||(!familyTag&&meta.level===2)
+  ? 'Release title mentions '+(exactRelease?genreSubfocus:style)+'.'
+  : 'Genre metadata: '+genreLabel+'.';
+ return {...t,_score:level*100+refMatches*10+Math.min(vibeHits.length,4),
+  _matchReason:reason+(refMatches?' Shares genre or tags with '+refMatches+' '+(refMatches===1?'reference.':'references.'):'')+
+   (vibeHits.length?' Metadata includes '+vibeHits.slice(0,2).join(', ')+'.':'')};
+}
+function rankRecommendations(tracks,refs,style,keywords,strict,limit){
+ const ranked=tracks.map(track=>rank(track,refs,style,keywords,strict)).filter(Boolean);
+ ranked.sort((a,b)=>b._score-a._score||
+  a.artistName.localeCompare(b.artistName));
+ const soundCloudSlots=[];
+ for(const [index,track] of ranked.entries()){
+  if(Number.isFinite(track.playbackCount))soundCloudSlots.push(index);
+ }
+ const byPopularity=soundCloudSlots.map(index=>ranked[index])
+  .sort((a,b)=>b._score-a._score||a.playbackCount-b.playbackCount);
+ soundCloudSlots.forEach((index,i)=>{ranked[index]=byPopularity[i]});
+ const seen=new Set();
+ const unique=ranked.filter(track=>{
+  const key=norm(track.artistName)+'|'+norm(track.trackName);
+  if(seen.has(key))return false;
+  seen.add(key);
+  return true;
+ });
+ return strict?diverseTop(unique,limit):unique.slice(0,limit);
 }
 function diverseTop(results,desired){
  const artists=new Set(),out=[];
@@ -612,7 +651,7 @@ function diverseTop(results,desired){
  }
  return out;
 }
-function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent=t.source||'Apple Music';flags.append(f);let a=document.createElement('a');a.textContent='Open on '+(t.source||'Apple Music');a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';info.append(name,artist,flags,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
+function render(){let root=$('results');root.replaceChildren();playlist.forEach((t,i)=>{let row=document.createElement('div');row.className='track';let img=document.createElement('img');img.src=(t.artworkUrl100||'').replace('100x100','200x200');img.alt='';img.loading='lazy';let info=document.createElement('div');info.className='details';let name=document.createElement('strong');name.textContent=(i+1)+'. '+t.trackName;let artist=document.createElement('div');artist.className='muted';artist.textContent=t.artistName+' · '+(t.primaryGenreName||'Unspecified genre');let flags=document.createElement('div');let f=document.createElement('span');f.className='flag';f.textContent=t.source||'Apple Music';flags.append(f);let a=document.createElement('a');a.textContent='Open on '+(t.source||'Apple Music');a.href=t.trackViewUrl||t.collectionViewUrl||'#';a.target='_blank';a.rel='noopener noreferrer';let reason=document.createElement('div');reason.className='muted match-reason';reason.textContent=t._matchReason;info.append(name,artist,flags,reason,a);row.append(img,info);root.append(row)});$('total').textContent='('+playlist.length+' tracks)';$('resultSection').hidden=false;['soundcloud','spotify','usb'].forEach(id=>$(id).disabled=!playlist.length)}
 $('generate').onclick=async()=>{
  const raw=$('refs').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);
  if(!raw.length){$('status').textContent='Add at least one reference song or SoundCloud link.';return;}
@@ -633,7 +672,7 @@ $('generate').onclick=async()=>{
   ))];
   $('resultSection').hidden=false;
   // Launch SoundCloud discovery immediately, but do not let an API error block other results.
-  const soundCloudTask=searchSoundCloudFromReferences(refs,style,desired,keywords).catch(e=>{
+  const soundCloudTask=searchSoundCloudFromReferences(refs,style,keywords).catch(e=>{
    $('scMessage').textContent='SoundCloud search unavailable: '+String(e.message||e);
    $('scMessage').hidden=false;
    return [];
@@ -641,24 +680,18 @@ $('generate').onclick=async()=>{
   let appleMusic=[];
   try{
    const terms=[...new Set([...(genreSubfocus?[genreSubfocus,genreSubfocus+' '+(refs[0]?.artist||'')]:[]),
-    ...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),...styleMap[style],
+    ...sharedGenreTerms(refs,style).slice(0,2),style,...refs.map(r=>r.artist&&r.artist+' '+style).filter(Boolean),...styleMap[style],
     ...refs.map(r=>r.name),style+' '+keywords.slice(0,2).join(' ')].filter(Boolean))].slice(0,12);
    $('status').textContent='Searching music catalogue…';
    const tasks=[];for(const term of terms.slice(0,6))for(const country of ['gb','us'])tasks.push({term,country});
    const {found,errors}=await batchSearch(tasks,(n,total)=>{$('status').textContent=`Searching catalogue… ${n}/${total} searches completed`;});
    if(!found.length)throw Error('Music catalogue could not retrieve results. '+(errors[0]||'Please check the backend deployment.'));
-   const all=dedup(found.flatMap(r=>r.results||[]));
-   const ranked=all.map(t=>rank(t,refs,style,keywords)).filter(t=>!t._reference);
-   ranked.sort((a,b)=>b._score-a._score||a.artistName.localeCompare(b.artistName));
-   const threshold=$('strict').checked?12:8;
-   appleMusic=diverseTop(ranked.filter(t=>t._eligible&&t._score>=threshold),desired);
-   const rejected=ranked.filter(t=>!t._eligible).length;
-   $('discoveryAudit').textContent=`${rejected} catalogue results excluded for uncertain or conflicting metadata. Catalogue genre and SoundCloud uploader tags are not audio recognition.`;
+   appleMusic=found.flatMap(r=>r.results||[]).filter(t=>t.kind==='song'&&t.trackName&&t.artistName);
   }catch(e){
    $('discoveryAudit').textContent='Apple Music search unavailable: '+String(e.message||e);
   }
   $('status').textContent='Finishing recommendations…';
-  playlist=mergeRecommendations(await soundCloudTask,appleMusic,desired);
+  playlist=rankRecommendations([...(await soundCloudTask),...appleMusic],refs,style,keywords,$('strict').checked,desired);
   render();
   $('status').textContent=playlist.length?'':'No matching tracks found. Try a broader genre or another reference.';
  }catch(e){
