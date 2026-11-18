@@ -17,7 +17,13 @@ export default async function soundcloudLikes(request) {
  if (request.method !== 'GET') return json({ error: 'GET required' }, 405, privateHeaders);
  if (!configured()) return json({ error: 'SoundCloud login is unavailable.' }, 503, privateHeaders);
 
- const cursor = new URL(request.url).searchParams.get('cursor');
+ const params = new URL(request.url).searchParams;
+ const cursor = params.get('cursor');
+ const playlist = params.get('playlist');
+ const kind = params.get('kind') || 'tracks';
+ if (!['tracks','playlists'].includes(kind) || (params.has('playlist') && !/^(?:soundcloud:playlists:)?[0-9]{1,24}$/.test(playlist))) {
+  return json({ error: 'Invalid SoundCloud likes selection.' }, 400, privateHeaders);
+ }
  if (cursor && cursor.length > 2048) return json({ error: 'Invalid page cursor.' }, 400, privateHeaders);
 
  let result;
@@ -30,7 +36,11 @@ export default async function soundcloudLikes(request) {
 
  const headers = { ...privateHeaders };
  if (result.changed) headers['set-cookie'] = cookie(names.session, seal(result.session), 7 * 86400);
- const endpoint = new URL('https://api.soundcloud.com/me/likes/tracks?linked_partitioning=true&limit=25');
+ const path = playlist
+  ? '/playlists/' + encodeURIComponent(playlist) + '/tracks'
+  : '/me/likes/' + kind;
+ const endpoint = new URL(path + '?linked_partitioning=true&limit=25', 'https://api.soundcloud.com');
+ const showPlaylists = kind === 'playlists' && !playlist;
  if (cursor) endpoint.searchParams.set('cursor', cursor);
 
  try {
@@ -49,11 +59,16 @@ export default async function soundcloudLikes(request) {
   const collection = Array.isArray(data) ? data : data.collection;
   if (!Array.isArray(collection)) throw Error('Invalid likes response');
   const items = collection.flatMap(entry => {
-   const track = entry.track ?? entry;
+   const track = entry?.track ?? entry?.playlist ?? entry;
+   if (!track) return [];
    const url = track.permalink_url;
    if (typeof url !== 'string' || !url.startsWith('https://soundcloud.com/') || !track.title) return [];
    const artwork = soundCloudImage(track.artwork_url) || soundCloudImage(track.user?.avatar_url);
-   return [{ title: track.title, artist: track.user?.username || '', url, artwork }];
+   const item = { title: track.title, artist: track.user?.username || '', url, artwork };
+   if (!showPlaylists) return [item];
+   const id = String(track.urn ?? track.id ?? '');
+   if (!/^(?:soundcloud:playlists:)?[0-9]{1,24}$/.test(id)) return [];
+   return [{ ...item, id, kind: 'playlist' }];
   });
   const nextCursor = data.next_href
    ? new URL(data.next_href, endpoint).searchParams.get('cursor')
