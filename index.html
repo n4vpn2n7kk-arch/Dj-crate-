@@ -65,9 +65,9 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
 
 .match-reason { margin:5px 0; line-height:1.4; }
 #selectedReferences { display:grid; gap:8px; margin-bottom:8px; }
-#likesNavigation { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
-#likesNavigation select { flex:1; margin:0; }
-#likesBack { min-height:44px; }
+#likesNavigation { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; padding-bottom:0; }
+#likesNavigation button { min-height:46px; margin:0; color:#ffdbc6; border:1px solid #79513d; }
+#likesNavigation button[aria-pressed="true"] { background:#ffc097; color:#291a24; border-color:#ffc097; }
 #selectedReferences .sc-like-row { background:#2c223c; }
 </style></head><body><header class="topbar"><div class="brand"><span class="brandmark">◉</span><span>DJ<span class="brandaccent">CRATE</span></span></div><div class="topright"><span class="live-dot"></span> DISCOVERY LAB <span class="version">V8.8</span></div></header><section class="sc-account-bar" aria-label="SoundCloud account">
   <div class="sc-profile">
@@ -82,7 +82,10 @@ button:focus-visible,.button:focus-visible{outline:2px solid #dbc5ff;outline-off
   </div><div class="sc-account-actions"><a id="scLogin" class="button secondary" href="/api/soundcloud/login" hidden>Connect SoundCloud</a><button id="scDisconnect" class="secondary" hidden>Disconnect</button></div></section><main><div aria-hidden="true" class="hero-backdrop"></div><div class="hero-meta">BUILT FOR DIGGERS  ·  NOT THE ALGORITHM</div><div class="eyebrow">DJ CRATE  /  DISCOVERY ENGINE  /  V8.8</div><h1>Find your next <span>underground gem.</span></h1><p class="sub">Your references. Your sound. A sharper way to dig for tracks and build a crate worth playing.</p><section class="panel panel-main"><h2>Set your direction</h2><label for="refs">Paste up to 5 SoundCloud links or artist — track names (one per line)</label><div id="selectedReferences" aria-label="Selected reference tracks"></div><textarea id="refs" placeholder="Paste a SoundCloud track URL…
 Or type: Artist — Track Name"></textarea><details id="scLikes" hidden>
  <summary>My SoundCloud Likes</summary>
- <div id="likesNavigation" class="sc-likes-body"><select id="likesKind" aria-label="SoundCloud likes view"><option value="tracks">Liked tracks</option><option value="playlists">Liked playlists</option></select><button type="button" id="likesBack" class="secondary" hidden>Back to playlists</button></div>
+ <div id="likesNavigation" class="sc-likes-body" role="group" aria-label="SoundCloud likes view">
+  <button type="button" id="likesTracks" class="secondary" aria-pressed="true">Likes</button>
+  <button type="button" id="likesPlaylists" class="secondary" aria-pressed="false">Playlists</button>
+ </div>
  <div class="sc-likes-body">
  <p class="muted">Open a playlist to browse its tracks, then tap Add or drag a track into the reference box.</p>
  <p id="scLikesStatus" class="muted" role="status"></p>
@@ -118,8 +121,7 @@ async function loadSoundCloudAccount() {
  likesLoaded = false;
  likesCursor = null;
  activePlaylist = null;
- $('likesKind').value = 'tracks';
- $('likesBack').hidden = true;
+ setLikesKind('tracks');
  $('scAccountName').textContent = 'SoundCloud';
  $('scAvatarFallback').textContent = 'SC';
  scAvatar.hidden = true;
@@ -180,6 +182,19 @@ let likesLoaded = false;
 let likesCursor = null;
 let likesLoading = false;
 let activePlaylist = null;
+let likesKind = 'tracks';
+const likesToggles = [$('likesTracks'), $('likesPlaylists')];
+
+function setLikesKind(kind) {
+ likesKind = kind;
+ likesToggles[0].setAttribute('aria-pressed', String(kind === 'tracks'));
+ likesToggles[1].setAttribute('aria-pressed', String(kind === 'playlists'));
+}
+function switchLikesKind(kind) {
+ if (likesLoading || (likesKind === kind && !activePlaylist)) return;
+ setLikesKind(kind);
+ openLikesView();
+}
 const selectedTracks = new Map();
 const likesPicker = $('scLikes');
 const referenceInput = $('refs');
@@ -250,7 +265,6 @@ function openLikesView(playlist = null) {
  activePlaylist = playlist;
  likesLoaded = false;
  likesCursor = null;
- $('likesBack').hidden = !playlist;
  $('scLikesList').replaceChildren();
  $('scLikesMore').hidden = true;
  loadSoundCloudLikes();
@@ -261,12 +275,11 @@ async function loadSoundCloudLikes() {
  const status = $('scLikesStatus');
  likesLoading = true;
  more.disabled = true;
- $('likesKind').disabled = true;
- $('likesBack').disabled = true;
+ likesToggles.forEach(button => { button.disabled = true; });
  $('scDisconnect').disabled = true;
  status.textContent = 'Loading your SoundCloud likes…';
  try {
-  const params = new URLSearchParams({kind: $('likesKind').value});
+  const params = new URLSearchParams({kind: likesKind});
   if (activePlaylist) params.set('playlist', activePlaylist.id);
   if (likesCursor) params.set('cursor', likesCursor);
   const response = await fetch('/.netlify/functions/soundcloud-likes?' + params, { cache: 'no-store' });
@@ -297,8 +310,7 @@ async function loadSoundCloudLikes() {
  } finally {
   likesLoading = false;
   more.disabled = false;
-  $('likesKind').disabled = false;
-  $('likesBack').disabled = false;
+  likesToggles.forEach(button => { button.disabled = false; });
   $('scDisconnect').disabled = false;
  }
 }
@@ -306,8 +318,8 @@ likesPicker.ontoggle = () => {
  if (likesPicker.open && !likesLoaded) loadSoundCloudLikes();
 };
 $('scLikesMore').onclick = loadSoundCloudLikes;
-$('likesKind').onchange = () => openLikesView();
-$('likesBack').onclick = () => openLikesView();
+$('likesTracks').onclick = () => switchLikesKind('tracks');
+$('likesPlaylists').onclick = () => switchLikesKind('playlists');
 referenceInput.ondragover = event => {
  if (event.dataTransfer.types.includes(likesDragType)) {
   event.preventDefault();
